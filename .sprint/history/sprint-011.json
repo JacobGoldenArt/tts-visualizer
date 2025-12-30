@@ -1,0 +1,96 @@
+{
+  "sprintId": "sprint-011",
+  "timestamp": "2025-12-30T14:30:00Z",
+  "feature": {
+    "number": 11,
+    "name": "Main Visualizer Component",
+    "description": "Top-level React component that orchestrates all modules and exposes a clean API for integration.",
+    "dependencies": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "11.1",
+      "description": "Component accepts `text` prop (current conversation text)",
+      "status": "pending"
+    },
+    {
+      "id": "11.2",
+      "description": "Component accepts `audioStream` prop (streaming audio source)",
+      "status": "pending"
+    },
+    {
+      "id": "11.3",
+      "description": "Component renders visualization canvas",
+      "status": "pending"
+    },
+    {
+      "id": "11.4",
+      "description": "Component optionally renders control interface",
+      "status": "pending"
+    },
+    {
+      "id": "11.5",
+      "description": "Component accepts `config` prop for initial settings",
+      "status": "pending"
+    },
+    {
+      "id": "11.6",
+      "description": "Component exposes `ref` with imperative methods (pause, resume)",
+      "status": "pending"
+    },
+    {
+      "id": "11.7",
+      "description": "Component handles missing audioStream gracefully (text-only mode)",
+      "status": "pending"
+    },
+    {
+      "id": "11.8",
+      "description": "Component handles missing text gracefully (audio-only mode)",
+      "status": "pending"
+    },
+    {
+      "id": "11.9",
+      "description": "Component properly cleans up all resources on unmount",
+      "status": "pending"
+    },
+    {
+      "id": "11.10",
+      "description": "Component supports custom className and style props",
+      "status": "pending"
+    },
+    {
+      "id": "11.11",
+      "description": "Component emits onMoodChange callback when mood updates",
+      "status": "pending"
+    },
+    {
+      "id": "11.12",
+      "description": "Component works in SSR environment (no window errors during build)",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript", "Canvas 2D", "Web Audio API"],
+    "relevantFiles": [
+      "src/core/AudioAdapter/AudioAdapter.ts",
+      "src/core/AudioAnalyzer/AudioAnalyzer.ts",
+      "src/core/SemanticPipeline/SemanticPipeline.ts",
+      "src/core/CanvasRenderer/CanvasRenderer.ts",
+      "src/core/MoodMapper/MoodMapper.ts",
+      "src/primitives/Spectrogram/Spectrogram.ts",
+      "src/primitives/Typography/Typography.ts",
+      "src/themes/ThemeManager.ts",
+      "src/components/Controls/Controls.tsx"
+    ],
+    "priorDecisions": [
+      "Visualizer runs parallel to existing chat UI",
+      "Text/Visual toggle adjusts opacity/z-index",
+      "Canvas 2D for lo-fi hand-drawn aesthetic",
+      "MoodMapper provides ColorPalette based on mood",
+      "Controls component handles user interaction"
+    ],
+    "notes": "Main component goes in src/components/Visualizer/. This is the public API surface - keep it simple. Orchestrates all modules: AudioAdapter → AudioAnalyzer → Spectrogram, SemanticPipeline → MoodMapper → Typography."
+  },
+  "status": "ready"
+}
