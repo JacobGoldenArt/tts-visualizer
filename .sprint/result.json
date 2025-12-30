@@ -1,15 +1,12 @@
 {
-  "sprintId": "sprint-010",
+  "sprintId": "sprint-011",
   "status": "complete",
-  "testsImplemented": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8", "8.9", "8.10"],
-  "notes": "Implemented Control Interface feature with React component. Created Controls.tsx with three sliders (saturation, intensity, motion) and mode toggle. Added ControlState types to visual.ts. Implemented getModeStyles utility for text/visual mode styling (opacity, blur, z-index). Added localStorage persistence support with configurable storage key. Supports headless mode for embedding. Added useControlState hook for external state management. All 68 tests pass. Also created setupTests.ts to configure @testing-library/jest-dom matchers for Vitest.",
+  "testsImplemented": ["11.1", "11.2", "11.3", "11.4", "11.5", "11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12"],
+  "notes": "Implemented the Main Visualizer Component (Feature 11) - the top-level React component that orchestrates all modules. Key implementation details:\n\n1. Component accepts `text` prop and triggers SemanticPipeline analysis on change\n2. Component accepts `audioStream` prop (ArrayBuffer or ReadableStream) and creates AudioAdapter/AudioAnalyzer chain\n3. Renders canvas via CanvasRenderer mounted to container div\n4. Controls interface is optional (showControls prop)\n5. Config prop supports width, height, theme, and initialControlState\n6. Exposes imperative ref methods: pause(), resume(), getState()\n7. Gracefully handles missing audio (text-only mode) or missing text (audio-only mode)\n8. Properly cleans up all resources on unmount (renderer, primitives, audio modules, mood mapper)\n9. Supports custom className and style props with proper merging\n10. Emits onMoodChange callback when semantic analysis produces new mood\n11. SSR-safe with `typeof window !== 'undefined'` check before browser APIs\n\nData flow:\n- text -> SemanticPipeline -> MoodMapper -> palette/params -> Spectrogram + Typography\n- audioStream -> AudioAdapter -> AudioAnalyzer -> frequency data -> Spectrogram\n- Controls -> controlState -> apply intensity/motion/mode to primitives",
   "filesModified": [
-    "src/types/visual.ts",
-    "src/components/Controls/Controls.tsx",
-    "src/components/Controls/Controls.test.tsx",
-    "src/components/Controls/index.ts",
-    "src/setupTests.ts",
-    "vitest.config.ts"
+    "src/components/Visualizer/Visualizer.tsx",
+    "src/components/Visualizer/Visualizer.test.tsx",
+    "src/components/Visualizer/index.ts"
   ],
   "blockers": []
 }

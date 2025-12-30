@@ -1,104 +1,147 @@
-# Sprint 010 Context: Control Interface
+# Sprint 011 Context: Main Visualizer Component
 
 ## Tech Stack
 - React + TypeScript
-- Vitest for testing (jsdom environment)
-- React Testing Library for component tests
+- Canvas 2D
+- Web Audio API
+- Vitest + React Testing Library
 
 ## Project Structure
 ```
 src/
   components/
-    Controls/        # ← You are implementing this
-      Controls.tsx   # Main React component
-      Controls.test.tsx
+    Visualizer/      # ← You are implementing this
+      Visualizer.tsx
+      Visualizer.test.tsx
       index.ts
+    Controls/        # Already implemented
   primitives/
-    Spectrogram/     # Has setIntensity(), setMotion(), setMode()
-    Typography/      # Has setIntensity(), setMotion(), setMode()
+    Spectrogram/     # Already implemented
+    Typography/      # Already implemented
   core/
-    MoodMapper/      # Can adjust saturation
-  types/
-    visual.ts        # ControlState type to be added
+    AudioAdapter/    # Already implemented
+    AudioAnalyzer/   # Already implemented
+    SemanticPipeline/ # Already implemented
+    CanvasRenderer/  # Already implemented
+    MoodMapper/      # Already implemented
+  themes/
+    ThemeManager     # Already implemented
+```
+
+## Data Flow
+
+```
+text prop → SemanticPipeline → MoodMapper → ColorPalette
+                                   ↓
+audioStream → AudioAdapter → AudioAnalyzer → frequency data
+                                   ↓
+                            CanvasRenderer
+                                   ↓
+                      Spectrogram + Typography
 ```
 
 ## Key Interfaces
 
-### Control State (to be created in src/types/visual.ts)
+### Visualizer Props (to be created)
 ```typescript
-interface ControlState {
-  saturation: number;  // 0-100
-  intensity: number;   // 0-100
-  motion: number;      // 0-100
-  mode: 'text' | 'visual';
+interface VisualizerProps {
+  text?: string;
+  audioStream?: ReadableStream<Uint8Array> | ArrayBuffer;
+  config?: Partial<VisualizerConfig>;
+  showControls?: boolean;
+  onMoodChange?: (mood: MoodObject) => void;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-interface ControlsProps {
-  initialState?: Partial<ControlState>;
-  onChange?: (state: ControlState) => void;
-  hidden?: boolean;  // Headless mode
-  storageKey?: string;  // localStorage key
+interface VisualizerConfig {
+  width?: number;
+  height?: number;
+  theme?: 'dark' | 'light' | 'system';
+  initialControlState?: Partial<ControlState>;
+}
+
+interface VisualizerRef {
+  pause(): void;
+  resume(): void;
+  getState(): VisualizerState;
 }
 ```
 
-### From Primitives
-```typescript
-// Spectrogram and Typography have these methods:
-setIntensity(value: number): void;  // 0-1 internally
-setMotion(value: number): void;     // 0-1 internally
-setMode(mode: 'text' | 'visual'): void;
-```
-
-## Visual Direction
-- Minimal UI - macro controls, not a full mixer
-- 3 sliders (saturation, intensity, motion) + 1 toggle (text/visual)
-- Should look clean and unobtrusive
-- Can be completely hidden for embedding
+### From existing modules
+- `AudioAdapter`: Accepts audio stream, emits 'data' events with AudioBuffer
+- `AudioAnalyzer`: Receives AudioBuffer, outputs frequency data
+- `SemanticPipeline`: analyze(text) → MoodObject
+- `MoodMapper`: updateMood(mood) → ColorPalette
+- `CanvasRenderer`: Drawing utilities + animation loop
+- `Spectrogram`: setPalette(), setIntensity(), setMotion(), setMode(), update(), render()
+- `Typography`: Same methods as Spectrogram + addKeywords()
+- `Controls`: React component with onChange callback
 
 ## Implementation Notes
 
-1. **Location**: `src/components/Controls/`
-   - `Controls.tsx` - React component
-   - `Controls.test.tsx` - Test suite
+1. **Location**: `src/components/Visualizer/`
+   - `Visualizer.tsx` - Main React component with forwardRef
+   - `Visualizer.test.tsx` - Test suite
    - `index.ts` - Exports
 
-2. **Slider behavior**:
-   - Range 0-100 for all sliders
-   - Convert to 0-1 when passing to primitives
-   - Real-time updates (no submit button)
+2. **Component structure**:
+   - Use useRef for canvas element
+   - Use useEffect for setup/cleanup
+   - Use useImperativeHandle for ref methods
+   - Initialize all modules in useEffect
 
-3. **Mode toggle**:
-   - Text mode: primitives render subtle/ambient
-   - Visual mode: primitives render prominent/expressive
-   - Toggle switch or button
+3. **SSR safety**:
+   - Check for `typeof window !== 'undefined'` before accessing browser APIs
+   - Lazy initialize AudioContext and other browser-only features
+   - Return null or placeholder during SSR
 
-4. **localStorage persistence**:
-   - Save state on change
-   - Load state on mount
-   - Configurable storage key
+4. **Resource cleanup**:
+   - Stop AudioAdapter on unmount
+   - Destroy AudioAnalyzer on unmount
+   - Stop CanvasRenderer animation loop on unmount
+   - Remove event listeners
 
-5. **Headless mode**:
-   - When `hidden={true}`, render nothing but still manage state
-   - Allows imperative control without UI
+5. **Graceful degradation**:
+   - No audio: Still show Typography with semantic analysis
+   - No text: Still show Spectrogram with audio
+   - Neither: Show minimal/idle visualization
 
-6. **onChange callback**:
-   - Called whenever any control changes
-   - Provides full ControlState object
+6. **Controls integration**:
+   - Optionally render Controls component
+   - Pass onChange to update primitives
+   - Apply control state to Spectrogram/Typography
 
 ## Existing Patterns
 
-From Spectrogram/Typography:
+From Controls:
 ```typescript
-// 0-1 range internally
-spectrogram.setIntensity(0.5);  // 50%
-spectrogram.setMotion(0.7);     // 70%
-spectrogram.setMode('visual');
+const handleChange = (state: ControlState) => {
+  spectrogram.setIntensity(state.intensity / 100);
+  spectrogram.setMotion(state.motion / 100);
+  spectrogram.setMode(state.mode);
+  // Same for typography
+};
+```
+
+From modules:
+```typescript
+// SemanticPipeline
+const mood = await pipeline.analyze(text);
+
+// MoodMapper
+moodMapper.updateMood(mood);
+const palette = moodMapper.getCurrentPalette();
+
+// Primitives
+spectrogram.setPalette(palette);
+typography.addKeywords(mood.keywords, 'assistant');
 ```
 
 ## Test Conventions
 - Use Vitest with jsdom environment
-- Use @testing-library/react for component tests
-- Mock localStorage
-- Test slider changes trigger onChange
-- Test mode toggle
-- Test persistence
+- Mock all core modules (AudioAdapter, etc.)
+- Test prop handling
+- Test ref methods
+- Test cleanup on unmount
+- Test SSR safety
