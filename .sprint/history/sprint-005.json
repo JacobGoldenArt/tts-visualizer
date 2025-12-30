@@ -1,0 +1,77 @@
+{
+  "sprintId": "sprint-005",
+  "timestamp": "2025-12-29T15:00:00Z",
+  "feature": {
+    "number": 7,
+    "name": "Mood-to-Visual Mapper",
+    "description": "Translates semantic analysis output into visual parameters (colors, intensity multipliers). Maps mood/sentiment to color palettes and intensity modifiers for the visualizer.",
+    "dependencies": [3],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "7.1",
+      "description": "Mapper accepts mood object from semantic pipeline",
+      "status": "pending"
+    },
+    {
+      "id": "7.2",
+      "description": "Mapper outputs color palette (primary, secondary, accent colors)",
+      "status": "pending"
+    },
+    {
+      "id": "7.3",
+      "description": "Mapper outputs intensity modifier (0.5 to 1.5 multiplier)",
+      "status": "pending"
+    },
+    {
+      "id": "7.4",
+      "description": "Positive sentiment maps to warm/bright colors",
+      "status": "pending"
+    },
+    {
+      "id": "7.5",
+      "description": "Negative sentiment maps to cool/muted colors",
+      "status": "pending"
+    },
+    {
+      "id": "7.6",
+      "description": "High energy maps to increased intensity modifier",
+      "status": "pending"
+    },
+    {
+      "id": "7.7",
+      "description": "Mapper supports custom mood-to-palette configurations",
+      "status": "pending"
+    },
+    {
+      "id": "7.8",
+      "description": "Mapper interpolates smoothly between mood changes (no jarring shifts)",
+      "status": "pending"
+    },
+    {
+      "id": "7.9",
+      "description": "Mapper provides suggested primitive weights (which to emphasize)",
+      "status": "pending"
+    },
+    {
+      "id": "7.10",
+      "description": "Mapper exposes current state for external access",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript"],
+    "relevantFiles": [
+      "src/types/semantic.ts",
+      "src/core/SemanticPipeline/SemanticPipeline.ts"
+    ],
+    "priorDecisions": [
+      "MoodObject contains: sentiment (-1 to 1), energy (0 to 1), keywords (top 5), emotion",
+      "Visual direction: lo-fi, warm, a little weird - roughness is feature",
+      "Use HSL color space for easier mood mapping"
+    ],
+    "notes": "Mapper should provide smooth interpolation between mood changes to avoid jarring visual shifts"
+  },
+  "status": "ready"
+}

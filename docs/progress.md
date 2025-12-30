@@ -22,6 +22,19 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Revision: Feature 10 (Mock Thread Fixtures)
+
+**Changes Made:**
+- Updated to use real chat transcripts from resources/chat_transcripts/
+- Added transcript parser tests (converts .md → JSON Message format)
+- Speaker mapping: Jacob = user, Elyse = assistant
+- Test count: 6 → 7
+
+**Reason:**
+Real transcripts provide more authentic test data than fictional fixtures. 5 conversation files already added covering varied emotional tones.
+
+---
+
 ### 2025-12-29 — Sprint 005: Mood-to-Visual Mapper
 
 **Status:** 🔴 → 🟢

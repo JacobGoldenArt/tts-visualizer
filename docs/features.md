@@ -1,6 +1,6 @@
 # Elyse Speech Visualizer - Features
 
-> 11 features | 110 tests | Last updated: 2025-12-28
+> 11 features | 111 tests | Last updated: 2025-12-30
 
 ## How to Use This File
 
@@ -106,21 +106,25 @@
 
 **Status:** 🔴 Not Started
 
-**Description:** Realistic conversation fixtures for testing and development.
+**Description:** Parse real conversation transcripts into structured fixtures for testing and development.
 
 **Dependencies:** None
 
 **Tests:**
-- [ ] Fixtures include realistic conversation length (50+ messages)
-- [ ] Fixtures include varied emotional tones (joy, tension, calm, humor)
-- [ ] Fixtures include both user and AI messages
-- [ ] Fixtures can be loaded in test/demo environment
+- [ ] Transcript parser converts .md files to Message[] JSON format
+- [ ] Parser correctly identifies speaker (Jacob → user, Elyse → assistant)
+- [ ] Parser preserves message order and content
+- [ ] Fixtures load from resources/chat_transcripts/*.md
+- [ ] Loaded fixtures include varied emotional tones (joy, tension, calm, existential)
 - [ ] Audio mock generates synthetic waveform for testing
-- [ ] Fixtures documented with expected mood outputs
+- [ ] Fixture loader exposes getMessages() and getMoodAnnotations() methods
 
 **Notes:**
-- Use real conversations from existing threads
-- Include variety of moods and conversational dynamics
+- Real transcripts in resources/chat_transcripts/ (5 files)
+- Markdown format: `Speaker: "dialogue"` → JSON Message objects
+- Speaker mapping: Jacob = user, Elyse = assistant
+- Transcripts cover: casual chat, existential discussion, humor, emotional depth
+- Eleven Labs integration testing: use voice ID `10ANszRcPh013aYVQ43R`
 
 ---
 

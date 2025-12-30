@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+/resources/chat_transcripts/
 
 # Environment variables
 .env
