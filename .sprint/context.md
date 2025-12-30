@@ -1,73 +1,83 @@
-# Sprint Context: Audio Adapter
+# Sprint Context: Semantic Pipeline
 
 ## Tech Stack
 - React 18 + TypeScript
 - Vite for bundling
 - Vitest for testing
-- Web Audio API for audio processing
+- No external dependencies for default analyzer
 
 ## Project Structure
 ```
 src/
   core/
-    AudioAdapter/    <- Your implementation goes here
-  types/             <- TypeScript interfaces
+    SemanticPipeline/    <- Your implementation goes here
+  types/
+    audio.ts             <- Existing types (reference for patterns)
 ```
 
 ## Implementation Guidelines
 
-### Event Emitter Pattern
-Use a simple event emitter pattern for 'data', 'end', and 'error' events.
-Consider extending EventTarget or creating a typed event system.
-
-### Web Audio API Usage
-- Use `AudioContext` for decoding audio
-- `AudioContext.decodeAudioData()` handles MP3, WAV automatically
-- For raw PCM, create AudioBuffer manually from the bytes
-
-### Interface Expectations
+### Mood Object Structure
 ```typescript
-interface AudioAdapterConfig {
-  format: 'pcm' | 'mp3' | 'wav';
-  sampleRate?: number;  // Expected sample rate
-  channels?: number;    // 1 = mono, 2 = stereo
-}
-
-interface AudioAdapter {
-  constructor(config?: AudioAdapterConfig);
-
-  // Feed audio data
-  feed(chunk: ArrayBuffer | Uint8Array): void;
-
-  // Signal stream complete
-  end(): void;
-
-  // Stop processing
-  stop(): void;
-
-  // Connect to downstream processor
-  connect(target: AudioNode | { receiveBuffer: (buffer: AudioBuffer) => void }): void;
-
-  // Events: 'data', 'end', 'error'
-  on(event: string, callback: Function): void;
-  off(event: string, callback: Function): void;
+interface MoodObject {
+  sentiment: number;    // -1 (negative) to 1 (positive)
+  energy: number;       // 0 (calm) to 1 (high energy)
+  keywords: string[];   // Top 5 most relevant words
+  emotion?: string;     // joy | sadness | anger | fear | surprise | neutral
 }
 ```
 
+### Analyzer Interface
+The pipeline should be modular - analyzers can be swapped:
+
+```typescript
+interface Analyzer {
+  analyze(text: string): MoodObject | Promise<MoodObject>;
+}
+
+interface SemanticPipeline {
+  analyze(text: string): Promise<MoodObject>;
+  setAnalyzer(analyzer: Analyzer): void;
+  on(event: 'analyzed', callback: (mood: MoodObject) => void): void;
+  off(event: 'analyzed', callback: (mood: MoodObject) => void): void;
+}
+```
+
+### Default Analyzer Approach
+For the default analyzer (no API calls):
+1. **Sentiment**: Use a keyword dictionary with positive/negative word lists
+2. **Energy**: Detect exclamation marks, caps, action words
+3. **Keywords**: Extract nouns/significant words, filter stopwords, return top 5
+4. **Emotion**: Map sentiment + energy to basic emotions
+
+Example word lists:
+- Positive: happy, love, great, wonderful, amazing, beautiful, excited...
+- Negative: sad, hate, terrible, awful, angry, frustrated, worried...
+- High energy: excited, running, shouting, urgent, amazing, incredible...
+- Low energy: calm, peaceful, quiet, slow, relaxed, tired...
+
+### Event Emitter Pattern
+Use the same pattern established in AudioAdapter:
+- Extend EventTarget or create typed event system
+- Emit 'analyzed' event with MoodObject after analysis
+
 ### Testing Approach
-- Tests should run in jsdom environment (Vitest default)
-- Mock AudioContext if needed (jsdom doesn't have Web Audio)
-- Focus on the adapter logic, not actual audio decoding
-- Use synthetic test data (typed arrays with known values)
+- Test with various text samples
+- Verify sentiment scores are in valid range
+- Verify keywords are limited to 5
+- Test empty string returns neutral mood
+- Test long text doesn't timeout (use a 1000+ word sample)
+- Test analyzer swapping works
 
 ## Key Decisions
-1. Start with PCM format first, it's simplest
-2. Use AudioContext.decodeAudioData for encoded formats
-3. Keep the public API stable even as internals evolve
-4. Handle edge cases gracefully (empty input, interruptions)
+1. Default analyzer uses keyword dictionaries (no API)
+2. Interface supports async for future LLM analyzers
+3. Keywords limited to top 5 most relevant
+4. Basic emotions: joy, sadness, anger, fear, surprise, neutral
 
 ## Files to Create
-- `src/core/AudioAdapter/index.ts` - Main implementation
-- `src/core/AudioAdapter/AudioAdapter.ts` - Class implementation
-- `src/core/AudioAdapter/AudioAdapter.test.ts` - Tests
-- `src/types/audio.ts` - Type definitions (if needed)
+- `src/core/SemanticPipeline/index.ts` - Module exports
+- `src/core/SemanticPipeline/SemanticPipeline.ts` - Main class
+- `src/core/SemanticPipeline/DefaultAnalyzer.ts` - Keyword-based analyzer
+- `src/core/SemanticPipeline/SemanticPipeline.test.ts` - Tests
+- `src/types/semantic.ts` - Type definitions

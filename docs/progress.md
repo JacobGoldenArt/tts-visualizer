@@ -22,6 +22,37 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-29 — Sprint 002: Semantic Pipeline
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented modular Semantic Pipeline with swappable analyzers
+- Default analyzer uses keyword dictionaries (no external API calls)
+- All 11 tests passing (56 total tests including edge cases)
+
+**Decisions:**
+- MoodObject contains: sentiment (-1 to 1), energy (0 to 1), keywords (top 5), emotion
+- Default analyzer detects 5 basic emotions: joy, sadness, anger, fear, surprise
+- Energy detection uses word lists + exclamation marks + CAPS detection
+- Keywords extracted by filtering stop words and ranking by frequency
+- Event emitter pattern for 'analyzed' events (same as AudioAdapter)
+
+**Files Modified:**
+- `src/types/semantic.ts` - Type definitions
+- `src/core/SemanticPipeline/DefaultAnalyzer.ts` - Keyword-based analyzer
+- `src/core/SemanticPipeline/SemanticPipeline.ts` - Main pipeline class
+- `src/core/SemanticPipeline/index.ts` - Module exports
+- `src/core/SemanticPipeline/SemanticPipeline.test.ts` - Test suite
+
+**App State:**
+- Tests: 97/97 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 4 - Canvas Renderer
+
+---
+
 ### 2025-12-29 — Sprint 001: Audio Adapter
 
 **Status:** 🔴 → 🟢
