@@ -85,6 +85,27 @@ src/
 4. Update feature status (🔴 → 🟡 → 🟢)
 5. Use `/app-creator:revise` if features need updating
 
+## Development Requirements: to be performed on initial setup.
+
+- [ ] React/TypeScript project created (Vite)
+- [ ] Package.json created with dependencies.
+- [ ] Folder structure per CLAUDE.md
+- [ ] Dependencies installed
+- [ ] .env.local configured (Eleven Labs API)
+- [ ] Created .sprint/ directory
+- [ ] Generated init.sh
+
+### Development Dependencies:
+- [ ] React/TypeScript project created (Vite)
+- [ ] Test framework installed (Jest)
+- [ ] Linting installed (ESLint)
+- [ ] Formatting installed (Prettier)
+- [ ] Type checking installed (TypeScript)
+- [ ] Testing library installed (React Testing Library)
+- [ ] Mocking library installed (Jest)
+- [ ] Coverage library installed (Jest)
+- [ ] Code coverage library installed (Jest)
+
 ## Commands
 
 ```bash

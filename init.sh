@@ -4,33 +4,30 @@
 
 set -e
 
-echo "🎨 Starting Elyse Speech Visualizer development environment..."
-
-# Check if package.json exists (project scaffolded)
-if [ ! -f "package.json" ]; then
-  echo "⚠️  No package.json found - project needs scaffolding"
-  echo ""
-  echo "Run the first sprint to scaffold the project:"
-  echo "  /dev-protocol:sprint"
-  exit 0
-fi
+echo "Starting Elyse Speech Visualizer development environment..."
 
 # Install dependencies
-echo "📦 Installing dependencies..."
-npm install
+if [ -f "package.json" ]; then
+  echo "Installing npm dependencies..."
+  npm install
+fi
+
+# Load environment variables
+if [ -f ".env.local" ]; then
+  echo "Loading environment variables..."
+  export $(cat .env.local | grep -v '^#' | xargs)
+else
+  echo "Warning: .env.local not found. Create it with your API keys."
+fi
 
 # Start dev server
-echo "🚀 Starting dev server..."
-npm run dev &
-DEV_PID=$!
-echo "Dev server PID: $DEV_PID"
+if [ -f "package.json" ]; then
+  echo "Starting dev server..."
+  npm run dev &
+  DEV_PID=$!
+  echo "Dev server PID: $DEV_PID"
+  sleep 3
+fi
 
-# Wait for server to be ready
-echo "⏳ Waiting for server to start..."
-sleep 3
-
-echo ""
-echo "✅ Environment ready!"
-echo "   Dev server running at http://localhost:5173 (or similar)"
-echo ""
-echo "To stop: kill $DEV_PID"
+echo "Environment ready"
+echo "Dev server running at http://localhost:5173"
