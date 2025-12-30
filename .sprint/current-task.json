@@ -1,63 +1,84 @@
 {
-  "sprintId": "sprint-006",
-  "timestamp": "2025-12-30T09:00:00Z",
+  "sprintId": "sprint-007",
+  "timestamp": "2025-12-30T12:30:00Z",
   "feature": {
-    "number": 10,
-    "name": "Mock Thread Fixtures",
-    "description": "Parse real conversation transcripts into structured fixtures for testing and development. Loads .md files from resources/chat_transcripts/ and converts them to Message[] JSON format.",
-    "dependencies": [],
+    "number": 5,
+    "name": "Spectrogram",
+    "description": "Frequency-reactive visualization that displays audio spectrum data with sketchy aesthetic.",
+    "dependencies": [2, 4],
     "status": "in_progress"
   },
   "tests": [
     {
-      "id": "10.1",
-      "description": "Transcript parser converts .md files to Message[] JSON format",
+      "id": "5.1",
+      "description": "Spectrogram renders frequency bands as vertical bars/lines",
       "status": "pending"
     },
     {
-      "id": "10.2",
-      "description": "Parser correctly identifies speaker (Jacob → user, Elyse → assistant)",
+      "id": "5.2",
+      "description": "Bar heights correspond to frequency magnitude",
       "status": "pending"
     },
     {
-      "id": "10.3",
-      "description": "Parser preserves message order and content",
+      "id": "5.3",
+      "description": "Spectrogram reacts in real-time as audio plays (<50ms latency feel)",
       "status": "pending"
     },
     {
-      "id": "10.4",
-      "description": "Fixtures load from resources/chat_transcripts/*.md",
+      "id": "5.4",
+      "description": "Spectrogram accepts color palette from mood mapper",
       "status": "pending"
     },
     {
-      "id": "10.5",
-      "description": "Loaded fixtures include varied emotional tones (joy, tension, calm, existential)",
+      "id": "5.5",
+      "description": "Spectrogram intensity is controllable (affects bar count/thickness)",
       "status": "pending"
     },
     {
-      "id": "10.6",
-      "description": "Audio mock generates synthetic waveform for testing",
+      "id": "5.6",
+      "description": "Spectrogram has 'sketchy' rendering (wobble on edges)",
       "status": "pending"
     },
     {
-      "id": "10.7",
-      "description": "Fixture loader exposes getMessages() and getMoodAnnotations() methods",
+      "id": "5.7",
+      "description": "Spectrogram gracefully handles no audio (flat or minimal state)",
+      "status": "pending"
+    },
+    {
+      "id": "5.8",
+      "description": "Spectrogram supports horizontal and vertical orientations",
+      "status": "pending"
+    },
+    {
+      "id": "5.9",
+      "description": "Motion control affects animation smoothness/speed",
+      "status": "pending"
+    },
+    {
+      "id": "5.10",
+      "description": "Spectrogram respects text/visual mode (opacity/prominence)",
       "status": "pending"
     }
   ],
   "context": {
-    "techStack": ["React", "TypeScript", "Vitest"],
+    "techStack": ["React", "TypeScript", "Canvas 2D", "Web Audio API"],
     "relevantFiles": [
-      "resources/chat_transcripts/*.md",
-      "src/types/",
-      "src/core/SemanticPipeline/"
+      "src/core/AudioAnalyzer/AudioAnalyzer.ts",
+      "src/core/CanvasRenderer/CanvasRenderer.ts",
+      "src/core/MoodMapper/MoodMapper.ts",
+      "src/types/audio.ts",
+      "src/types/canvas.ts",
+      "src/types/visual.ts"
     ],
     "priorDecisions": [
-      "Speaker mapping: Jacob = user, Elyse = assistant",
-      "SemanticPipeline already exists for mood analysis",
-      "Message format should include role, content, and optional metadata"
+      "Canvas 2D for lo-fi hand-drawn aesthetic",
+      "CanvasRenderer provides drawLine() with configurable wobble/sketchiness",
+      "AudioAnalyzer outputs frequency data as Float32Array (FFT)",
+      "MoodMapper outputs ColorPalette with primary, secondary, accent colors",
+      "Layer compositing: background, midground, foreground",
+      "Text/Visual mode = opacity/z-index adjustment"
     ],
-    "notes": "5 transcript files exist. Format is 'Speaker:\\n\\n\"dialogue text\"'. Consider using SemanticPipeline for mood annotations."
+    "notes": "Spectrogram goes in src/primitives/Spectrogram/. Use CanvasRenderer's sketchy drawing utilities. Consider mirroring/symmetry option for later."
   },
   "status": "ready"
 }

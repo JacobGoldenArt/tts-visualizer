@@ -22,6 +22,37 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Sprint 007: Spectrogram
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented Spectrogram primitive for frequency-reactive visualization
+- Renders frequency bands as vertical/horizontal bars with sketchy aesthetic
+- All 10 tests passing (51 test cases total including edge cases)
+
+**Decisions:**
+- Frequency mapping: dB values (-100 to 0) normalized to heights (0-1)
+- Intensity control (0-1): Affects bar count (0.5x to 1.5x base) and thickness
+- Motion control (0-1): Interpolation factor for smooth animation transitions
+- Display mode: Visual mode opacity 1.0, text mode opacity 0.3 (hsla format)
+- Sketchy effect via wobble parameter passed to CanvasRenderer.drawLine()
+- Color usage: Primary color for normal bars, accent color for peaks (>70% height)
+- Orientation: Vertical bars (x1=x2) or horizontal bars (y1=y2)
+
+**Files Created:**
+- `src/primitives/Spectrogram/Spectrogram.ts` - Main implementation
+- `src/primitives/Spectrogram/Spectrogram.test.ts` - Test suite
+- `src/primitives/Spectrogram/index.ts` - Module exports
+
+**App State:**
+- Tests: 372/372 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 6 - Typography, Feature 9 - Theme Support, or Feature 8 - Control Interface
+
+---
+
 ### 2025-12-30 — Sprint 006: Mock Thread Fixtures
 
 **Status:** 🔴 → 🟢
