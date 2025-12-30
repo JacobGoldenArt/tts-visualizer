@@ -1,40 +1,40 @@
-# Sprint 007 Context: Spectrogram
+# Sprint 008 Context: Typography
 
 ## Tech Stack
 - React + TypeScript
 - Canvas 2D (chosen for lo-fi aesthetic)
-- Web Audio API for frequency analysis
 - Vitest for testing (jsdom environment)
 
 ## Project Structure
 ```
 src/
   primitives/
-    Spectrogram/     # ← You are implementing this
+    Typography/      # ← You are implementing this
+    Spectrogram/     # Already implemented
   core/
-    AudioAnalyzer/   # Provides frequency data (Float32Array)
-    CanvasRenderer/  # Drawing utilities with sketchy aesthetic
-    MoodMapper/      # Provides ColorPalette
+    SemanticPipeline/  # Provides keywords array
+    CanvasRenderer/    # Drawing utilities with sketchy aesthetic
+    MoodMapper/        # Provides ColorPalette
   types/
-    audio.ts         # AnalyzerData interface
+    semantic.ts      # MoodObject interface
     canvas.ts        # Drawing types
     visual.ts        # ColorPalette, VisualParams
 ```
 
 ## Key Interfaces
 
-### From AudioAnalyzer (src/types/audio.ts)
+### From SemanticPipeline (src/types/semantic.ts)
 ```typescript
-interface AnalyzerData {
-  frequencyData: Float32Array;  // FFT frequency bands (64+ values, 0-255 range)
-  amplitude: number;            // Normalized 0-1
-  timestamp: number;
+interface MoodObject {
+  sentiment: number;   // -1 to 1 scale
+  energy: number;      // 0 to 1 scale
+  keywords: string[];  // Top 5 most relevant words
+  emotion: 'joy' | 'sadness' | 'anger' | 'fear' | 'surprise' | 'neutral';
 }
 ```
 
 ### From CanvasRenderer (src/core/CanvasRenderer)
-- `drawLine(ctx, x1, y1, x2, y2, options)` - Sketchy line with wobble
-- `drawBlob(ctx, x, y, radius, options)` - Organic shapes
+- `drawText(ctx, text, x, y, options)` - Text with optional distortion
 - Uses layer system (background, midground, foreground)
 
 ### From MoodMapper (src/types/visual.ts)
@@ -49,52 +49,57 @@ interface ColorPalette {
 
 ## Visual Direction
 - **Lo-fi, warm, a little weird** - roughness is a feature
-- Hand-drawn/sketchy quality (not clean digital lines)
-- Use CanvasRenderer's wobble parameter for sketchy edges
-- Consider subtle imperfections in bar heights
+- Keywords float/drift across canvas
+- Fading in and out over time
+- Size/emphasis based on mood energy
+- Glow effect for highlighted keywords
+- NOT full conversation text - just keywords/fragments
 
 ## Implementation Notes
 
-1. **Location**: `src/primitives/Spectrogram/`
-   - `Spectrogram.ts` - Main class
-   - `Spectrogram.test.ts` - Test suite
+1. **Location**: `src/primitives/Typography/`
+   - `Typography.ts` - Main class
+   - `Typography.test.ts` - Test suite
    - `index.ts` - Exports
 
-2. **Rendering approach**:
-   - Draw frequency bars using CanvasRenderer utilities
-   - Each bar height = frequency magnitude at that band
-   - Apply wobble/sketchiness to bar edges
-   - Use ColorPalette for bar fill/stroke
+2. **Keyword rendering**:
+   - Each keyword is a floating "particle" with position, velocity, opacity
+   - Keywords fade in, drift, then fade out
+   - Size based on emphasis/intensity
+   - Color from ColorPalette
 
 3. **Controls**:
-   - `intensity` (0-1): Affects bar count and/or thickness
-   - `motion` (0-1): Affects animation smoothness (interpolation)
-   - `mode` ('text' | 'visual'): Affects opacity/prominence
-   - `orientation` ('horizontal' | 'vertical'): Bar direction
+   - `intensity` (0-1): Affects keyword size/glow strength
+   - `motion` (0-1): Affects drift speed
+   - `mode` ('text' | 'visual'): Text mode = subtle/ambient, Visual mode = prominent/expressive
+   - `fontFamily`: Configurable font
+   - `baseSize`: Base font size
+   - `fadeDuration`: How long keywords take to fade out
 
-4. **No audio state**: When no frequency data, show flat/minimal visualization (not blank)
+4. **User vs AI differentiation**: Subtle visual difference (color tint, position bias, etc.)
 
-5. **Performance**: Real-time reactive (<50ms feel), use requestAnimationFrame timing
+5. **Lifecycle**: Keywords should have spawn time, lifetime, and auto-cleanup
 
 ## Existing Patterns
 
-From AudioAnalyzer test setup:
-```typescript
-// Mock frequency data for testing
-const mockFrequencyData = new Float32Array(64).fill(128);
-```
-
 From CanvasRenderer usage:
 ```typescript
-// Sketchy line example
-renderer.drawLine(ctx, x1, y1, x2, y2, {
-  wobble: 0.3,  // Sketchiness amount
-  color: palette.primary
+// Text with distortion example
+renderer.drawText(ctx, 'keyword', x, y, {
+  font: '24px sans-serif',
+  color: palette.primary,
+  distortion: 0.2  // Slight shake/wobble
 });
+```
+
+From Spectrogram pattern:
+```typescript
+// Mode affects opacity
+const opacity = this.mode === 'visual' ? 1.0 : 0.3;
 ```
 
 ## Test Conventions
 - Use Vitest with jsdom environment
 - Mock canvas context for rendering tests
-- Test with mock frequency data arrays
-- Verify drawing calls are made correctly
+- Test keyword lifecycle (spawn, update, fade, cleanup)
+- Verify positioning stays within bounds

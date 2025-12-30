@@ -22,6 +22,38 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Sprint 008: Typography
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented Typography primitive with keyword particle system
+- Floating/drifting animation for keywords with fade-in/fade-out lifecycle
+- All 11 tests passing (67 test cases total including edge cases)
+
+**Decisions:**
+- Keyword particles with position, velocity, opacity, and lifetime
+- Visual emphasis via size scaling (intensity control), color, and glow effect
+- Text mode: opacity 0.3, minimal distortion (subtle/ambient)
+- Visual mode: opacity 1.0, higher distortion (prominent/expressive)
+- User vs AI differentiation via color (secondary vs primary palette)
+- Boundary collision with bounce effect
+- Mood energy affects pop behavior (size pulse)
+- Motion control affects drift speed (velocity multiplier)
+
+**Files Created:**
+- `src/primitives/Typography/Typography.ts` - Main implementation
+- `src/primitives/Typography/Typography.test.ts` - Test suite
+- `src/primitives/Typography/index.ts` - Module exports
+
+**App State:**
+- Tests: 439/439 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 9 - Theme Support or Feature 8 - Control Interface
+
+---
+
 ### 2025-12-30 — Sprint 007: Spectrogram
 
 **Status:** 🔴 → 🟢
