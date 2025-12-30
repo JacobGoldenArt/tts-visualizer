@@ -1,71 +1,82 @@
 {
-  "sprintId": "sprint-009",
-  "timestamp": "2025-12-30T13:30:00Z",
+  "sprintId": "sprint-010",
+  "timestamp": "2025-12-30T14:00:00Z",
   "feature": {
-    "number": 9,
-    "name": "Theme Support",
-    "description": "Dark and light theme variants that adapt all visual elements.",
-    "dependencies": [4],
+    "number": 8,
+    "name": "Control Interface",
+    "description": "User-facing controls for adjusting visualization parameters.",
+    "dependencies": [7],
     "status": "in_progress"
   },
   "tests": [
     {
-      "id": "9.1",
-      "description": "Dark theme applies dark background, light accents",
+      "id": "8.1",
+      "description": "Saturation slider adjusts color vibrancy (0-100 range)",
       "status": "pending"
     },
     {
-      "id": "9.2",
-      "description": "Light theme applies light background, dark accents",
+      "id": "8.2",
+      "description": "Intensity slider adjusts visual density (0-100 range)",
       "status": "pending"
     },
     {
-      "id": "9.3",
-      "description": "Theme is configurable via prop",
+      "id": "8.3",
+      "description": "Motion slider adjusts animation speed/amount (0-100 range)",
       "status": "pending"
     },
     {
-      "id": "9.4",
-      "description": "Theme respects system preference by default (prefers-color-scheme)",
+      "id": "8.4",
+      "description": "Text/Visual mode toggle switches between modes",
       "status": "pending"
     },
     {
-      "id": "9.5",
-      "description": "Theme can be overridden regardless of system preference",
+      "id": "8.5",
+      "description": "Text mode: low opacity, blurred, ambient background",
       "status": "pending"
     },
     {
-      "id": "9.6",
-      "description": "Theme change transitions smoothly (no flash)",
+      "id": "8.6",
+      "description": "Visual mode: prominent, higher z-index, immersive",
       "status": "pending"
     },
     {
-      "id": "9.7",
-      "description": "All primitives (spectrogram, typography) adapt to current theme",
+      "id": "8.7",
+      "description": "Control changes apply in real-time (no lag)",
       "status": "pending"
     },
     {
-      "id": "9.8",
-      "description": "Mood colors work well in both themes",
+      "id": "8.8",
+      "description": "Controls expose onChange callback for external state management",
+      "status": "pending"
+    },
+    {
+      "id": "8.9",
+      "description": "Controls can be hidden (headless mode for embedding)",
+      "status": "pending"
+    },
+    {
+      "id": "8.10",
+      "description": "Control state persists via localStorage",
       "status": "pending"
     }
   ],
   "context": {
-    "techStack": ["React", "TypeScript", "Canvas 2D"],
+    "techStack": ["React", "TypeScript"],
     "relevantFiles": [
-      "src/core/CanvasRenderer/CanvasRenderer.ts",
       "src/core/MoodMapper/MoodMapper.ts",
       "src/primitives/Spectrogram/Spectrogram.ts",
       "src/primitives/Typography/Typography.ts",
+      "src/themes/ThemeManager.ts",
       "src/types/visual.ts"
     ],
     "priorDecisions": [
-      "Canvas 2D for lo-fi hand-drawn aesthetic",
-      "MoodMapper outputs ColorPalette with primary, secondary, accent, background",
-      "Primitives accept color palette and use it for rendering",
-      "Lo-fi, warm, a little weird - roughness is a feature"
+      "Macro controls only - 3 sliders + 1 toggle, not a full mixer",
+      "Primitives accept intensity, motion, and mode settings",
+      "MoodMapper handles color saturation adjustments",
+      "Text/Visual mode = opacity/z-index adjustment",
+      "localStorage for simple state persistence"
     ],
-    "notes": "Theme system goes in src/themes/. Create dark.ts and light.ts with theme definitions. Theme manager should detect system preference but allow override. Consider CSS custom properties for non-canvas elements."
+    "notes": "Controls go in src/components/Controls/. Create React component with sliders and toggle. Expose both UI component and imperative API. Keep UI minimal."
   },
   "status": "ready"
 }

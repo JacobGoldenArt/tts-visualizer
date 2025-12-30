@@ -1,15 +1,15 @@
 {
-  "sprintId": "sprint-009",
+  "sprintId": "sprint-010",
   "status": "complete",
-  "testsImplemented": ["9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"],
-  "notes": "Implemented complete theme support system with dark and light themes. The ThemeManager handles system preference detection via matchMedia API, allows explicit mode override, and provides smooth transitions between themes using HSL color interpolation with easing. All 8 tests from the task file are covered by comprehensive test suites (54 tests total). Key design decisions: (1) Theme provides background, foreground, and basePalette colors that can be used by primitives and modified by mood; (2) Transition duration is configurable (default 300ms); (3) Uses ease-out cubic easing for natural-feeling transitions; (4) Dark theme has low lightness background (~8%) with high lightness palette colors (40-80%) for visibility; (5) Light theme has high lightness background (~95%) with lower palette colors (20-60%) for contrast; (6) Both themes maintain warm accent colors for lo-fi aesthetic consistency.",
+  "testsImplemented": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8", "8.9", "8.10"],
+  "notes": "Implemented Control Interface feature with React component. Created Controls.tsx with three sliders (saturation, intensity, motion) and mode toggle. Added ControlState types to visual.ts. Implemented getModeStyles utility for text/visual mode styling (opacity, blur, z-index). Added localStorage persistence support with configurable storage key. Supports headless mode for embedding. Added useControlState hook for external state management. All 68 tests pass. Also created setupTests.ts to configure @testing-library/jest-dom matchers for Vitest.",
   "filesModified": [
-    "src/types/theme.ts",
-    "src/themes/dark.ts",
-    "src/themes/light.ts",
-    "src/themes/ThemeManager.ts",
-    "src/themes/index.ts",
-    "src/themes/ThemeManager.test.ts"
+    "src/types/visual.ts",
+    "src/components/Controls/Controls.tsx",
+    "src/components/Controls/Controls.test.tsx",
+    "src/components/Controls/index.ts",
+    "src/setupTests.ts",
+    "vitest.config.ts"
   ],
   "blockers": []
 }

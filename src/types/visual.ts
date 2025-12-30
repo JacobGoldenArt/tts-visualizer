@@ -7,6 +7,39 @@
 import type { Emotion, MoodObject } from './semantic';
 
 /**
+ * Display mode for the visualizer
+ */
+export type DisplayMode = 'text' | 'visual';
+
+/**
+ * Control state for the visualizer controls
+ */
+export interface ControlState {
+  /** Saturation level (0-100) - affects color vibrancy */
+  saturation: number;
+  /** Intensity level (0-100) - affects visual density */
+  intensity: number;
+  /** Motion level (0-100) - affects animation speed/amount */
+  motion: number;
+  /** Display mode - text (ambient) or visual (prominent) */
+  mode: DisplayMode;
+}
+
+/**
+ * Props for the Controls component
+ */
+export interface ControlsProps {
+  /** Initial control state (partial, will use defaults for missing values) */
+  initialState?: Partial<ControlState>;
+  /** Callback when any control value changes */
+  onChange?: (state: ControlState) => void;
+  /** Whether to hide the UI (headless mode for embedding) */
+  hidden?: boolean;
+  /** localStorage key for persisting state (omit to disable persistence) */
+  storageKey?: string;
+}
+
+/**
  * Color palette for the visualizer
  */
 export interface ColorPalette {

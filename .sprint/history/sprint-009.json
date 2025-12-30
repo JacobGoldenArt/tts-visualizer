@@ -1,0 +1,71 @@
+{
+  "sprintId": "sprint-009",
+  "timestamp": "2025-12-30T13:30:00Z",
+  "feature": {
+    "number": 9,
+    "name": "Theme Support",
+    "description": "Dark and light theme variants that adapt all visual elements.",
+    "dependencies": [4],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "9.1",
+      "description": "Dark theme applies dark background, light accents",
+      "status": "pending"
+    },
+    {
+      "id": "9.2",
+      "description": "Light theme applies light background, dark accents",
+      "status": "pending"
+    },
+    {
+      "id": "9.3",
+      "description": "Theme is configurable via prop",
+      "status": "pending"
+    },
+    {
+      "id": "9.4",
+      "description": "Theme respects system preference by default (prefers-color-scheme)",
+      "status": "pending"
+    },
+    {
+      "id": "9.5",
+      "description": "Theme can be overridden regardless of system preference",
+      "status": "pending"
+    },
+    {
+      "id": "9.6",
+      "description": "Theme change transitions smoothly (no flash)",
+      "status": "pending"
+    },
+    {
+      "id": "9.7",
+      "description": "All primitives (spectrogram, typography) adapt to current theme",
+      "status": "pending"
+    },
+    {
+      "id": "9.8",
+      "description": "Mood colors work well in both themes",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript", "Canvas 2D"],
+    "relevantFiles": [
+      "src/core/CanvasRenderer/CanvasRenderer.ts",
+      "src/core/MoodMapper/MoodMapper.ts",
+      "src/primitives/Spectrogram/Spectrogram.ts",
+      "src/primitives/Typography/Typography.ts",
+      "src/types/visual.ts"
+    ],
+    "priorDecisions": [
+      "Canvas 2D for lo-fi hand-drawn aesthetic",
+      "MoodMapper outputs ColorPalette with primary, secondary, accent, background",
+      "Primitives accept color palette and use it for rendering",
+      "Lo-fi, warm, a little weird - roughness is a feature"
+    ],
+    "notes": "Theme system goes in src/themes/. Create dark.ts and light.ts with theme definitions. Theme manager should detect system preference but allow override. Consider CSS custom properties for non-canvas elements."
+  },
+  "status": "ready"
+}

@@ -22,6 +22,41 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Sprint 010: Control Interface
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented Controls React component with 3 sliders + mode toggle
+- getModeStyles utility for text/visual mode styling
+- localStorage persistence with configurable storage key
+- All 10 tests passing (68 test cases total including edge cases)
+
+**Decisions:**
+- Three range sliders: saturation, intensity, motion (0-100 range)
+- Mode toggle button for text/visual switching
+- Text mode: opacity 0.3, blur 8px, z-index 0
+- Visual mode: opacity 1.0, no blur, z-index 10
+- useControlState hook for external state management
+- Hidden prop for headless mode embedding
+- DEFAULT_CONTROL_STATE export for initialization
+
+**Files Created:**
+- `src/types/visual.ts` - Added ControlState, DisplayMode, ControlsProps types
+- `src/components/Controls/Controls.tsx` - Main React component
+- `src/components/Controls/Controls.test.tsx` - Test suite
+- `src/components/Controls/index.ts` - Module exports
+- `src/setupTests.ts` - Test setup for jest-dom matchers
+- Updated `vitest.config.ts` - Added setupTests.ts
+
+**App State:**
+- Tests: 561/561 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 11 - Main Visualizer Component (final feature!)
+
+---
+
 ### 2025-12-30 — Sprint 009: Theme Support
 
 **Status:** 🔴 → 🟢
