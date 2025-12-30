@@ -105,3 +105,89 @@ export interface IAudioAdapter {
   /** Remove an event listener */
   off<T extends AudioAdapterEventType>(event: T, callback: AudioAdapterCallback<T>): void;
 }
+
+// ============================================================
+// Audio Analyzer Types
+// ============================================================
+
+/**
+ * Valid FFT sizes for the AudioAnalyzer
+ */
+export type FFTSize = 256 | 512 | 1024 | 2048;
+
+/**
+ * Configuration for the AudioAnalyzer
+ */
+export interface AudioAnalyzerConfig {
+  /** FFT size (256, 512, 1024, 2048). Default: 2048 */
+  fftSize?: FFTSize;
+  /** Web Audio smoothing time constant (0-1). Default: 0.8 */
+  smoothingTimeConstant?: number;
+  /** Amplitude attack time in ms. Default: 10 */
+  attackTime?: number;
+  /** Amplitude release time in ms. Default: 100 */
+  releaseTime?: number;
+}
+
+/**
+ * Data emitted by the AudioAnalyzer on each frame
+ */
+export interface AnalyzerData {
+  /** FFT frequency data as Float32Array */
+  frequencyData: Float32Array;
+  /** Normalized amplitude value (0-1) */
+  amplitude: number;
+  /** Timestamp when this data was captured */
+  timestamp: number;
+}
+
+/**
+ * Event types emitted by the AudioAnalyzer
+ */
+export type AudioAnalyzerEventType = 'data';
+
+/**
+ * Callback type for analyzer events
+ */
+export type AudioAnalyzerCallback = (data: AnalyzerData) => void;
+
+/**
+ * Interface for the AudioAnalyzer
+ */
+export interface IAudioAnalyzer extends AudioBufferReceiver {
+  /** Current configuration (read-only copy) */
+  readonly config: Required<AudioAnalyzerConfig>;
+
+  /** Number of frequency bins (fftSize / 2) */
+  readonly frequencyBinCount: number;
+
+  /** Whether the analyzer is paused */
+  readonly isPaused: boolean;
+
+  /** Whether the analyzer has been destroyed */
+  readonly isDestroyed: boolean;
+
+  /** Receive an AudioBuffer from the AudioAdapter */
+  receiveBuffer(buffer: AudioBuffer): void;
+
+  /** Pause the analyzer (stops emitting data) */
+  pause(): void;
+
+  /** Resume the analyzer (starts emitting data) */
+  resume(): void;
+
+  /** Destroy the analyzer and clean up resources */
+  destroy(): void;
+
+  /** Get the current frequency data (returns a copy) */
+  getFrequencyData(): Float32Array;
+
+  /** Get the current normalized amplitude (0-1) */
+  getAmplitude(): number;
+
+  /** Register an event listener */
+  on(event: AudioAnalyzerEventType, callback: AudioAnalyzerCallback): void;
+
+  /** Remove an event listener */
+  off(event: AudioAnalyzerEventType, callback: AudioAnalyzerCallback): void;
+}

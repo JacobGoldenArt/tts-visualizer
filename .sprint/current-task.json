@@ -1,78 +1,78 @@
 {
-  "sprintId": "sprint-003",
-  "timestamp": "2025-12-29T23:05:00Z",
+  "sprintId": "sprint-004",
+  "timestamp": "2025-12-29T14:30:00Z",
   "feature": {
-    "number": 4,
-    "name": "Canvas Renderer",
-    "description": "Core 2D canvas rendering system with utilities for lo-fi, sketchy aesthetic.",
-    "dependencies": [],
+    "number": 2,
+    "name": "Audio Analyzer",
+    "description": "Processes normalized audio data and extracts frequency spectrum and amplitude values in real-time using Web Audio API.",
+    "dependencies": [1],
     "status": "in_progress"
   },
   "tests": [
     {
-      "id": "4.1",
-      "description": "Renderer initializes canvas at specified dimensions",
+      "id": "2.1",
+      "description": "Analyzer receives AudioBuffer from Audio Adapter",
       "status": "pending"
     },
     {
-      "id": "4.2",
-      "description": "Renderer supports responsive sizing (fills container)",
+      "id": "2.2",
+      "description": "Analyzer outputs frequency data as Float32Array (FFT)",
       "status": "pending"
     },
     {
-      "id": "4.3",
-      "description": "Renderer exposes clear() method to wipe canvas",
+      "id": "2.3",
+      "description": "Analyzer outputs current amplitude as normalized 0-1 value",
       "status": "pending"
     },
     {
-      "id": "4.4",
-      "description": "Renderer provides drawLine() with configurable wobble/sketchiness",
+      "id": "2.4",
+      "description": "Analyzer emits data at consistent frame rate (~60fps or requestAnimationFrame)",
       "status": "pending"
     },
     {
-      "id": "4.5",
-      "description": "Renderer provides drawBlob() for organic shapes",
+      "id": "2.5",
+      "description": "Frequency data contains at least 64 bands",
       "status": "pending"
     },
     {
-      "id": "4.6",
-      "description": "Renderer provides drawText() with optional distortion",
+      "id": "2.6",
+      "description": "Analyzer exposes configurable FFT size (256, 512, 1024, 2048)",
       "status": "pending"
     },
     {
-      "id": "4.7",
-      "description": "Renderer supports layer compositing (background, midground, foreground)",
+      "id": "2.7",
+      "description": "Analyzer continues outputting zero values when no audio is playing",
       "status": "pending"
     },
     {
-      "id": "4.8",
-      "description": "Renderer handles high-DPI displays (devicePixelRatio)",
+      "id": "2.8",
+      "description": "Analyzer can be paused and resumed",
       "status": "pending"
     },
     {
-      "id": "4.9",
-      "description": "Renderer exposes animation loop via onFrame(callback)",
+      "id": "2.9",
+      "description": "Analyzer properly disconnects and cleans up on destroy()",
       "status": "pending"
     },
     {
-      "id": "4.10",
-      "description": "Renderer can apply global effects (grain, chromatic aberration)",
-      "status": "pending"
-    },
-    {
-      "id": "4.11",
-      "description": "Renderer properly cleans up on unmount (cancels animation frame)",
+      "id": "2.10",
+      "description": "Amplitude smoothing is configurable (attack/release time)",
       "status": "pending"
     }
   ],
   "context": {
-    "techStack": ["React", "TypeScript", "Canvas 2D API"],
-    "relevantFiles": ["src/core/CanvasRenderer/"],
-    "priorDecisions": [
-      "Canvas 2D over WebGL for hand-drawn aesthetic",
-      "Lo-fi, warm, a little weird - roughness is a feature"
+    "techStack": ["React", "TypeScript", "Web Audio API", "Canvas 2D"],
+    "relevantFiles": [
+      "src/core/AudioAdapter/AudioAdapter.ts",
+      "src/types/audio.ts"
     ],
-    "notes": "Sketchiness = small random offsets on line vertices. Grain = semi-transparent noise overlay."
+    "priorDecisions": [
+      "Use Web Audio API AnalyserNode for FFT and amplitude",
+      "Event emitter pattern for async callbacks",
+      "AudioBufferReceiver interface for receiving buffers from AudioAdapter",
+      "Lazy AudioContext initialization"
+    ],
+    "notes": "AudioAnalyzer should implement AudioBufferReceiver interface to integrate with AudioAdapter.connect()"
   },
   "status": "ready"
 }

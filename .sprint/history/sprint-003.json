@@ -1,0 +1,78 @@
+{
+  "sprintId": "sprint-003",
+  "timestamp": "2025-12-29T23:05:00Z",
+  "feature": {
+    "number": 4,
+    "name": "Canvas Renderer",
+    "description": "Core 2D canvas rendering system with utilities for lo-fi, sketchy aesthetic.",
+    "dependencies": [],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "4.1",
+      "description": "Renderer initializes canvas at specified dimensions",
+      "status": "pending"
+    },
+    {
+      "id": "4.2",
+      "description": "Renderer supports responsive sizing (fills container)",
+      "status": "pending"
+    },
+    {
+      "id": "4.3",
+      "description": "Renderer exposes clear() method to wipe canvas",
+      "status": "pending"
+    },
+    {
+      "id": "4.4",
+      "description": "Renderer provides drawLine() with configurable wobble/sketchiness",
+      "status": "pending"
+    },
+    {
+      "id": "4.5",
+      "description": "Renderer provides drawBlob() for organic shapes",
+      "status": "pending"
+    },
+    {
+      "id": "4.6",
+      "description": "Renderer provides drawText() with optional distortion",
+      "status": "pending"
+    },
+    {
+      "id": "4.7",
+      "description": "Renderer supports layer compositing (background, midground, foreground)",
+      "status": "pending"
+    },
+    {
+      "id": "4.8",
+      "description": "Renderer handles high-DPI displays (devicePixelRatio)",
+      "status": "pending"
+    },
+    {
+      "id": "4.9",
+      "description": "Renderer exposes animation loop via onFrame(callback)",
+      "status": "pending"
+    },
+    {
+      "id": "4.10",
+      "description": "Renderer can apply global effects (grain, chromatic aberration)",
+      "status": "pending"
+    },
+    {
+      "id": "4.11",
+      "description": "Renderer properly cleans up on unmount (cancels animation frame)",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript", "Canvas 2D API"],
+    "relevantFiles": ["src/core/CanvasRenderer/"],
+    "priorDecisions": [
+      "Canvas 2D over WebGL for hand-drawn aesthetic",
+      "Lo-fi, warm, a little weird - roughness is a feature"
+    ],
+    "notes": "Sketchiness = small random offsets on line vertices. Grain = semi-transparent noise overlay."
+  },
+  "status": "ready"
+}
