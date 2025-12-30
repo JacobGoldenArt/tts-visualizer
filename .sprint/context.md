@@ -1,83 +1,159 @@
-# Sprint Context: Semantic Pipeline
+# Sprint Context: Canvas Renderer
 
 ## Tech Stack
 - React 18 + TypeScript
-- Vite for bundling
+- Canvas 2D API (NOT WebGL)
 - Vitest for testing
-- No external dependencies for default analyzer
+- jsdom environment (mock canvas context in tests)
 
 ## Project Structure
 ```
 src/
   core/
-    SemanticPipeline/    <- Your implementation goes here
+    CanvasRenderer/    <- Your implementation goes here
   types/
-    audio.ts             <- Existing types (reference for patterns)
+    audio.ts           <- Existing types
+    semantic.ts        <- Existing types
 ```
 
 ## Implementation Guidelines
 
-### Mood Object Structure
+### Visual Direction
+- **Lo-fi, warm, a little weird** - roughness is a feature
+- Hand-drawn/sketchy quality (pencil over Pixar)
+- Subtle glitch, chromatic aberration
+- Not screensaver territory - intentional, semantically grounded
+
+### Core Interface
 ```typescript
-interface MoodObject {
-  sentiment: number;    // -1 (negative) to 1 (positive)
-  energy: number;       // 0 (calm) to 1 (high energy)
-  keywords: string[];   // Top 5 most relevant words
-  emotion?: string;     // joy | sadness | anger | fear | surprise | neutral
+interface CanvasRendererConfig {
+  width?: number;
+  height?: number;
+  responsive?: boolean;      // Fill container if true
+  pixelRatio?: number;       // Auto-detect devicePixelRatio if not set
+}
+
+interface DrawLineOptions {
+  wobble?: number;           // 0 = straight, 1 = maximum wobble
+  color?: string;
+  lineWidth?: number;
+}
+
+interface DrawBlobOptions {
+  irregularity?: number;     // How organic/wobbly the shape is
+  color?: string;
+  fill?: boolean;
+}
+
+interface DrawTextOptions {
+  distortion?: number;       // 0 = clean, 1 = maximum distortion
+  font?: string;
+  color?: string;
+}
+
+interface GlobalEffects {
+  grain?: number;            // 0 = none, 1 = heavy grain
+  chromaticAberration?: number;
+}
+
+type Layer = 'background' | 'midground' | 'foreground';
+
+interface CanvasRenderer {
+  // Lifecycle
+  mount(container: HTMLElement): void;
+  unmount(): void;
+
+  // Drawing primitives
+  clear(layer?: Layer): void;
+  drawLine(x1: number, y1: number, x2: number, y2: number, options?: DrawLineOptions): void;
+  drawBlob(x: number, y: number, radius: number, options?: DrawBlobOptions): void;
+  drawText(text: string, x: number, y: number, options?: DrawTextOptions): void;
+
+  // Layer management
+  setLayer(layer: Layer): void;
+
+  // Animation
+  onFrame(callback: (deltaTime: number) => void): void;
+  offFrame(callback: (deltaTime: number) => void): void;
+
+  // Effects
+  setEffects(effects: GlobalEffects): void;
+
+  // Dimensions
+  readonly width: number;
+  readonly height: number;
 }
 ```
 
-### Analyzer Interface
-The pipeline should be modular - analyzers can be swapped:
-
+### Wobble/Sketchiness Algorithm
+For sketchy lines, add small random offsets to line vertices:
 ```typescript
-interface Analyzer {
-  analyze(text: string): MoodObject | Promise<MoodObject>;
-}
-
-interface SemanticPipeline {
-  analyze(text: string): Promise<MoodObject>;
-  setAnalyzer(analyzer: Analyzer): void;
-  on(event: 'analyzed', callback: (mood: MoodObject) => void): void;
-  off(event: 'analyzed', callback: (mood: MoodObject) => void): void;
+function wobbleLine(x1, y1, x2, y2, wobbleAmount) {
+  const segments = 5; // Break line into segments
+  const points = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const x = x1 + (x2 - x1) * t + (Math.random() - 0.5) * wobbleAmount;
+    const y = y1 + (y2 - y1) * t + (Math.random() - 0.5) * wobbleAmount;
+    points.push({ x, y });
+  }
+  return points;
 }
 ```
 
-### Default Analyzer Approach
-For the default analyzer (no API calls):
-1. **Sentiment**: Use a keyword dictionary with positive/negative word lists
-2. **Energy**: Detect exclamation marks, caps, action words
-3. **Keywords**: Extract nouns/significant words, filter stopwords, return top 5
-4. **Emotion**: Map sentiment + energy to basic emotions
+### Layer Compositing
+Use multiple canvas elements or offscreen canvases stacked:
+- Background: static/slow-moving elements
+- Midground: main visualization
+- Foreground: overlays, effects
 
-Example word lists:
-- Positive: happy, love, great, wonderful, amazing, beautiful, excited...
-- Negative: sad, hate, terrible, awful, angry, frustrated, worried...
-- High energy: excited, running, shouting, urgent, amazing, incredible...
-- Low energy: calm, peaceful, quiet, slow, relaxed, tired...
+### High-DPI Support
+```typescript
+const dpr = window.devicePixelRatio || 1;
+canvas.width = width * dpr;
+canvas.height = height * dpr;
+canvas.style.width = `${width}px`;
+canvas.style.height = `${height}px`;
+ctx.scale(dpr, dpr);
+```
 
-### Event Emitter Pattern
-Use the same pattern established in AudioAdapter:
-- Extend EventTarget or create typed event system
-- Emit 'analyzed' event with MoodObject after analysis
+### Grain Effect
+Apply a semi-transparent noise overlay using imageData or a pre-generated noise pattern:
+```typescript
+function applyGrain(ctx, intensity) {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const noise = (Math.random() - 0.5) * intensity * 50;
+    data[i] += noise;     // R
+    data[i + 1] += noise; // G
+    data[i + 2] += noise; // B
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+```
+
+### Chromatic Aberration
+Offset RGB channels slightly:
+```typescript
+function applyChromaticAberration(ctx, amount) {
+  // Render scene 3 times with slight offsets
+  // Red channel: offset left
+  // Blue channel: offset right
+  // Or use channel separation techniques
+}
+```
 
 ### Testing Approach
-- Test with various text samples
-- Verify sentiment scores are in valid range
-- Verify keywords are limited to 5
-- Test empty string returns neutral mood
-- Test long text doesn't timeout (use a 1000+ word sample)
-- Test analyzer swapping works
-
-## Key Decisions
-1. Default analyzer uses keyword dictionaries (no API)
-2. Interface supports async for future LLM analyzers
-3. Keywords limited to top 5 most relevant
-4. Basic emotions: joy, sadness, anger, fear, surprise, neutral
+- Mock canvas context in jsdom (canvas doesn't render but methods are callable)
+- Test that methods exist and are callable
+- Test dimensions and responsive behavior
+- Test animation loop starts/stops correctly
+- Test cleanup on unmount
 
 ## Files to Create
-- `src/core/SemanticPipeline/index.ts` - Module exports
-- `src/core/SemanticPipeline/SemanticPipeline.ts` - Main class
-- `src/core/SemanticPipeline/DefaultAnalyzer.ts` - Keyword-based analyzer
-- `src/core/SemanticPipeline/SemanticPipeline.test.ts` - Tests
-- `src/types/semantic.ts` - Type definitions
+- `src/core/CanvasRenderer/index.ts` - Module exports
+- `src/core/CanvasRenderer/CanvasRenderer.ts` - Main class
+- `src/core/CanvasRenderer/effects.ts` - Grain, chromatic aberration
+- `src/core/CanvasRenderer/CanvasRenderer.test.ts` - Tests
+- `src/types/canvas.ts` - Type definitions (optional, can inline)

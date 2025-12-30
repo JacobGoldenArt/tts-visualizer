@@ -75,24 +75,24 @@
 
 ### 4. Canvas Renderer
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 
 **Description:** Core 2D canvas rendering system with utilities for lo-fi, sketchy aesthetic.
 
 **Dependencies:** None
 
 **Tests:**
-- [ ] Renderer initializes canvas at specified dimensions
-- [ ] Renderer supports responsive sizing (fills container)
-- [ ] Renderer exposes `clear()` method to wipe canvas
-- [ ] Renderer provides `drawLine()` with configurable wobble/sketchiness
-- [ ] Renderer provides `drawBlob()` for organic shapes
-- [ ] Renderer provides `drawText()` with optional distortion
-- [ ] Renderer supports layer compositing (background, midground, foreground)
-- [ ] Renderer handles high-DPI displays (devicePixelRatio)
-- [ ] Renderer exposes animation loop via `onFrame(callback)`
-- [ ] Renderer can apply global effects (grain, chromatic aberration)
-- [ ] Renderer properly cleans up on unmount (cancels animation frame)
+- [x] Renderer initializes canvas at specified dimensions
+- [x] Renderer supports responsive sizing (fills container)
+- [x] Renderer exposes `clear()` method to wipe canvas
+- [x] Renderer provides `drawLine()` with configurable wobble/sketchiness
+- [x] Renderer provides `drawBlob()` for organic shapes
+- [x] Renderer provides `drawText()` with optional distortion
+- [x] Renderer supports layer compositing (background, midground, foreground)
+- [x] Renderer handles high-DPI displays (devicePixelRatio)
+- [x] Renderer exposes animation loop via `onFrame(callback)`
+- [x] Renderer can apply global effects (grain, chromatic aberration)
+- [x] Renderer properly cleans up on unmount (cancels animation frame)
 
 **Notes:**
 - Sketchiness = small random offsets on line vertices
