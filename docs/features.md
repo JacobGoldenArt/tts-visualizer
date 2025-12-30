@@ -18,24 +18,24 @@
 
 ### 1. Audio Adapter
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 
 **Description:** Accepts streaming audio from various TTS providers and normalizes it into a consistent format for analysis.
 
 **Dependencies:** None
 
 **Tests:**
-- [ ] Adapter accepts raw PCM audio bytes and outputs AudioBuffer
-- [ ] Adapter accepts MP3 chunks and decodes to AudioBuffer
-- [ ] Adapter accepts WAV chunks and decodes to AudioBuffer
-- [ ] Adapter handles different sample rates (22050Hz, 44100Hz, 48000Hz)
-- [ ] Adapter emits 'data' events as audio chunks arrive
-- [ ] Adapter emits 'end' event when stream completes
-- [ ] Adapter handles empty/null input without crashing
-- [ ] Adapter can be instantiated with a config object specifying expected format
-- [ ] Adapter exposes `connect()` method to pipe to Audio Analyzer
-- [ ] Adapter can be stopped mid-stream via `stop()` method
-- [ ] Adapter handles connection interruption gracefully (emits error event)
+- [x] Adapter accepts raw PCM audio bytes and outputs AudioBuffer
+- [x] Adapter accepts MP3 chunks and decodes to AudioBuffer
+- [x] Adapter accepts WAV chunks and decodes to AudioBuffer
+- [x] Adapter handles different sample rates (22050Hz, 44100Hz, 48000Hz)
+- [x] Adapter emits 'data' events as audio chunks arrive
+- [x] Adapter emits 'end' event when stream completes
+- [x] Adapter handles empty/null input without crashing
+- [x] Adapter can be instantiated with a config object specifying expected format
+- [x] Adapter exposes `connect()` method to pipe to Audio Analyzer
+- [x] Adapter can be stopped mid-stream via `stop()` method
+- [x] Adapter handles connection interruption gracefully (emits error event)
 
 **Notes:**
 - Start with one format (likely PCM), add others as we test providers

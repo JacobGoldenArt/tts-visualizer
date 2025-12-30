@@ -22,6 +22,35 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-29 — Sprint 001: Audio Adapter
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented AudioAdapter with full support for PCM, MP3, and WAV formats
+- All 11 tests passing (41 total tests including edge cases)
+
+**Decisions:**
+- Used event emitter pattern with typed events for 'data', 'end', and 'error'
+- Lazy AudioContext initialization for better resource management
+- Config getter returns copies to prevent external mutation
+- Error events distinguish between recoverable and non-recoverable errors
+- Added static factory method `AudioAdapter.forFormat()` for common configs
+
+**Files Modified:**
+- `src/types/audio.ts` - Type definitions
+- `src/core/AudioAdapter/AudioAdapter.ts` - Main implementation
+- `src/core/AudioAdapter/index.ts` - Module exports
+- `src/core/AudioAdapter/AudioAdapter.test.ts` - Test suite
+
+**App State:**
+- Tests: 41/41 passing
+- TypeScript: Compiles clean
+
+**Next:** Feature 3 - Semantic Pipeline (or Feature 4 - Canvas Renderer)
+
+---
+
 ### 2025-12-29 — Dev Protocol Initialized
 
 **Scaffolding:**
