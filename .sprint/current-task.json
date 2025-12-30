@@ -1,78 +1,77 @@
 {
-  "sprintId": "sprint-004",
-  "timestamp": "2025-12-29T14:30:00Z",
+  "sprintId": "sprint-005",
+  "timestamp": "2025-12-29T15:00:00Z",
   "feature": {
-    "number": 2,
-    "name": "Audio Analyzer",
-    "description": "Processes normalized audio data and extracts frequency spectrum and amplitude values in real-time using Web Audio API.",
-    "dependencies": [1],
+    "number": 7,
+    "name": "Mood-to-Visual Mapper",
+    "description": "Translates semantic analysis output into visual parameters (colors, intensity multipliers). Maps mood/sentiment to color palettes and intensity modifiers for the visualizer.",
+    "dependencies": [3],
     "status": "in_progress"
   },
   "tests": [
     {
-      "id": "2.1",
-      "description": "Analyzer receives AudioBuffer from Audio Adapter",
+      "id": "7.1",
+      "description": "Mapper accepts mood object from semantic pipeline",
       "status": "pending"
     },
     {
-      "id": "2.2",
-      "description": "Analyzer outputs frequency data as Float32Array (FFT)",
+      "id": "7.2",
+      "description": "Mapper outputs color palette (primary, secondary, accent colors)",
       "status": "pending"
     },
     {
-      "id": "2.3",
-      "description": "Analyzer outputs current amplitude as normalized 0-1 value",
+      "id": "7.3",
+      "description": "Mapper outputs intensity modifier (0.5 to 1.5 multiplier)",
       "status": "pending"
     },
     {
-      "id": "2.4",
-      "description": "Analyzer emits data at consistent frame rate (~60fps or requestAnimationFrame)",
+      "id": "7.4",
+      "description": "Positive sentiment maps to warm/bright colors",
       "status": "pending"
     },
     {
-      "id": "2.5",
-      "description": "Frequency data contains at least 64 bands",
+      "id": "7.5",
+      "description": "Negative sentiment maps to cool/muted colors",
       "status": "pending"
     },
     {
-      "id": "2.6",
-      "description": "Analyzer exposes configurable FFT size (256, 512, 1024, 2048)",
+      "id": "7.6",
+      "description": "High energy maps to increased intensity modifier",
       "status": "pending"
     },
     {
-      "id": "2.7",
-      "description": "Analyzer continues outputting zero values when no audio is playing",
+      "id": "7.7",
+      "description": "Mapper supports custom mood-to-palette configurations",
       "status": "pending"
     },
     {
-      "id": "2.8",
-      "description": "Analyzer can be paused and resumed",
+      "id": "7.8",
+      "description": "Mapper interpolates smoothly between mood changes (no jarring shifts)",
       "status": "pending"
     },
     {
-      "id": "2.9",
-      "description": "Analyzer properly disconnects and cleans up on destroy()",
+      "id": "7.9",
+      "description": "Mapper provides suggested primitive weights (which to emphasize)",
       "status": "pending"
     },
     {
-      "id": "2.10",
-      "description": "Amplitude smoothing is configurable (attack/release time)",
+      "id": "7.10",
+      "description": "Mapper exposes current state for external access",
       "status": "pending"
     }
   ],
   "context": {
-    "techStack": ["React", "TypeScript", "Web Audio API", "Canvas 2D"],
+    "techStack": ["React", "TypeScript"],
     "relevantFiles": [
-      "src/core/AudioAdapter/AudioAdapter.ts",
-      "src/types/audio.ts"
+      "src/types/semantic.ts",
+      "src/core/SemanticPipeline/SemanticPipeline.ts"
     ],
     "priorDecisions": [
-      "Use Web Audio API AnalyserNode for FFT and amplitude",
-      "Event emitter pattern for async callbacks",
-      "AudioBufferReceiver interface for receiving buffers from AudioAdapter",
-      "Lazy AudioContext initialization"
+      "MoodObject contains: sentiment (-1 to 1), energy (0 to 1), keywords (top 5), emotion",
+      "Visual direction: lo-fi, warm, a little weird - roughness is feature",
+      "Use HSL color space for easier mood mapping"
     ],
-    "notes": "AudioAnalyzer should implement AudioBufferReceiver interface to integrate with AudioAdapter.connect()"
+    "notes": "Mapper should provide smooth interpolation between mood changes to avoid jarring visual shifts"
   },
   "status": "ready"
 }

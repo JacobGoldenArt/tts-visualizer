@@ -1,111 +1,117 @@
-# Sprint Context: Feature 2 - Audio Analyzer
+# Sprint Context: Feature 7 - Mood-to-Visual Mapper
 
 ## Tech Stack
 - React + TypeScript
-- Web Audio API (AnalyserNode for FFT/amplitude)
-- Vite for dev/build
 - Vitest for testing with jsdom environment
 
 ## Project Structure
 ```
 src/
   core/
-    AudioAdapter/     # Already implemented - provides AudioBuffer via connect()
-    AudioAnalyzer/    # YOUR TARGET - implement here
-    CanvasRenderer/   # Already implemented
-    SemanticPipeline/ # Already implemented
-    MoodMapper/       # Not yet implemented
+    SemanticPipeline/  # Already implemented - provides MoodObject
+    MoodMapper/        # YOUR TARGET - implement here
   types/
-    audio.ts          # Audio-related types including AudioBufferReceiver
+    semantic.ts        # Contains MoodObject, Emotion types
 ```
 
-## Key Integration Point
-
-The AudioAdapter (Feature 1) uses an event/connection pattern:
-- It emits AudioBuffer via `receiveBuffer()` method
-- AudioAnalyzer should implement `AudioBufferReceiver` interface:
+## Input: MoodObject (from Semantic Pipeline)
 
 ```typescript
-export interface AudioBufferReceiver {
-  receiveBuffer(buffer: AudioBuffer): void;
+type Emotion = 'joy' | 'sadness' | 'anger' | 'fear' | 'surprise' | 'neutral';
+
+interface MoodObject {
+  sentiment: number;  // -1 (negative) to 1 (positive)
+  energy: number;     // 0 (calm) to 1 (high energy)
+  keywords: string[]; // Top 5 relevant keywords
+  emotion: Emotion;   // Detected emotion
 }
 ```
 
-Then AudioAdapter.connect(analyzer) will pipe buffers to the analyzer.
+## Output: Visual Parameters
 
-## Implementation Requirements
+The mapper should output:
 
-1. **Use Web Audio API AnalyserNode** for FFT and amplitude analysis
-2. **Follow event emitter pattern** similar to AudioAdapter (on/off methods)
-3. **Implement AudioBufferReceiver** to integrate with AudioAdapter.connect()
-4. **Use requestAnimationFrame** for consistent ~60fps data emission
-5. **Support configurable FFT sizes**: 256, 512, 1024, 2048
-6. **Amplitude smoothing**: attack/release time for smooth transitions
+```typescript
+interface ColorPalette {
+  primary: string;    // Main color (HSL or hex)
+  secondary: string;  // Supporting color
+  accent: string;     // Highlight color
+}
+
+interface VisualParams {
+  palette: ColorPalette;
+  intensity: number;           // 0.5 to 1.5 multiplier
+  primitiveWeights: {          // Which primitives to emphasize
+    spectrogram: number;       // 0 to 1
+    typography: number;        // 0 to 1
+    blobs: number;             // 0 to 1
+  };
+}
+```
+
+## Mood-to-Color Mapping Guidelines
+
+Use HSL color space for intuitive mapping:
+
+- **Positive sentiment (0 to 1)**: Warm hues (red, orange, yellow)
+  - Hue: ~0-60 degrees
+  - Higher saturation for more positive
+  - Higher lightness for more positive
+
+- **Negative sentiment (-1 to 0)**: Cool hues (blue, purple)
+  - Hue: ~180-280 degrees
+  - Lower saturation (muted)
+  - Lower lightness
+
+- **Energy affects saturation/brightness**:
+  - High energy: More vibrant (higher saturation, contrast)
+  - Low energy: More muted (lower saturation)
+
+## Emotion-Specific Colors (suggestions)
+
+- **Joy**: Warm yellows, oranges
+- **Sadness**: Deep blues, muted purples
+- **Anger**: Reds, dark oranges
+- **Fear**: Dark purples, deep grays
+- **Surprise**: Bright cyans, pinks
+- **Neutral**: Soft grays, muted tones
+
+## Interpolation
+
+The mapper should smoothly transition between mood states:
+- Track current visual params
+- When new mood arrives, interpolate over configurable duration
+- Use easing function for natural transitions
+
+```typescript
+// Example interpolation config
+interface MapperConfig {
+  interpolationDuration?: number;  // ms, default ~500
+  customPalettes?: Record<Emotion, ColorPalette>;
+}
+```
+
+## Primitive Weights
+
+Suggest which visual primitives to emphasize:
+- High energy + positive → more spectrogram activity
+- Emotional + keywords present → more typography
+- Calm + neutral → more blobs/ambient
 
 ## Testing Notes
 
-- Use jsdom environment (already configured in vitest.config.ts)
-- Mock Web Audio API components as needed
-- Test file should be: `src/core/AudioAnalyzer/AudioAnalyzer.test.ts`
-
-## Conventions from Existing Code
-
-- Types go in `src/types/` (add analyzer types to audio.ts or new file)
-- Use index.ts for module exports
-- Prefix private methods with underscore
-- Use lazy initialization pattern for AudioContext
-- Return copies from getters to prevent external mutation
-
-## FFT Size Reference
-
-- FFT size 256 = 128 frequency bins
-- FFT size 512 = 256 frequency bins
-- FFT size 1024 = 512 frequency bins
-- FFT size 2048 = 1024 frequency bins
-
-Minimum requirement: 64 bands (so FFT size 128 minimum, but 256+ recommended)
-
-## Suggested Interface
-
-```typescript
-interface AudioAnalyzerConfig {
-  fftSize?: 256 | 512 | 1024 | 2048;
-  smoothingTimeConstant?: number;  // Web Audio smoothing (0-1)
-  attackTime?: number;             // Amplitude attack in ms
-  releaseTime?: number;            // Amplitude release in ms
-}
-
-interface AnalyzerData {
-  frequencyData: Float32Array;     // FFT data
-  amplitude: number;               // Normalized 0-1
-  timestamp: number;
-}
-
-interface AudioAnalyzer extends AudioBufferReceiver {
-  readonly config: AudioAnalyzerConfig;
-  readonly frequencyBinCount: number;
-  readonly isPaused: boolean;
-
-  // From AudioBufferReceiver
-  receiveBuffer(buffer: AudioBuffer): void;
-
-  // Control
-  pause(): void;
-  resume(): void;
-  destroy(): void;
-
-  // Data access
-  getFrequencyData(): Float32Array;
-  getAmplitude(): number;
-
-  // Events
-  on(event: 'data', callback: (data: AnalyzerData) => void): void;
-  off(event: 'data', callback: (data: AnalyzerData) => void): void;
-}
-```
+- Use jsdom environment
+- Test color output validity (valid HSL/hex)
+- Test interpolation over time
+- Test custom palette configuration
 
 ## Files to Create
-- `src/core/AudioAnalyzer/index.ts` - Module exports
-- `src/core/AudioAnalyzer/AudioAnalyzer.ts` - Main class
-- `src/core/AudioAnalyzer/AudioAnalyzer.test.ts` - Tests
-- Add types to `src/types/audio.ts` or create `src/types/analyzer.ts`
+- `src/core/MoodMapper/index.ts` - Module exports
+- `src/core/MoodMapper/MoodMapper.ts` - Main class
+- `src/core/MoodMapper/MoodMapper.test.ts` - Tests
+- Add types to `src/types/` (visual.ts or mapper.ts)
+
+## Conventions
+- Follow existing event emitter pattern if needed
+- Return copies from getters to prevent mutation
+- Use requestAnimationFrame for interpolation updates
