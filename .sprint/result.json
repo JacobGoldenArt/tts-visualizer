@@ -1,24 +1,15 @@
 {
-  "sprintId": "sprint-005",
+  "sprintId": "sprint-006",
   "status": "complete",
-  "testsImplemented": [
-    "7.1",
-    "7.2",
-    "7.3",
-    "7.4",
-    "7.5",
-    "7.6",
-    "7.7",
-    "7.8",
-    "7.9",
-    "7.10"
-  ],
-  "notes": "Implemented MoodMapper class that translates semantic analysis output (MoodObject) into visual parameters. Key features: (1) Accepts mood objects with sentiment, energy, keywords, and emotion from SemanticPipeline. (2) Outputs ColorPalette with primary/secondary/accent colors in HSL format. (3) Maps energy (0-1) to intensity multiplier (0.5-1.5). (4) Positive sentiment produces warm/bright colors with hue shifts toward yellow/orange and increased lightness. (5) Negative sentiment produces cool/muted colors with desaturation and lower lightness. (6) High energy increases intensity modifier linearly. (7) Supports custom mood-to-palette configurations via constructor and setConfig(). (8) Smooth interpolation between mood changes using ease-out cubic easing over configurable duration (default 500ms). (9) Primitive weights (spectrogram, typography, blobs) calculated based on energy, sentiment, keywords presence, and emotion. (10) Exposes current state via getParams() and getState() methods with immutable copies. Uses setTimeout-based animation loop for better testability with fake timers.",
+  "testsImplemented": ["10.1", "10.2", "10.3", "10.4", "10.5", "10.6", "10.7"],
+  "notes": "Implemented Mock Thread Fixtures feature with TranscriptParser, MockAudio, and FixtureLoader. The TranscriptParser handles the specific markdown format from resources/chat_transcripts/ with speaker patterns (Jacob/Elyse/Elise) and quoted dialogue. MockAudio generates synthetic waveforms (sine wave, white noise, speech-like) for testing without real TTS. FixtureLoader combines both components and exposes getMessages() and getMoodAnnotations() methods. All 61 tests pass including integration tests with real transcript files.",
   "filesModified": [
-    "src/types/visual.ts",
-    "src/core/MoodMapper/MoodMapper.ts",
-    "src/core/MoodMapper/MoodMapper.test.ts",
-    "src/core/MoodMapper/index.ts"
+    "src/types/fixtures.ts",
+    "src/fixtures/TranscriptParser.ts",
+    "src/fixtures/MockAudio.ts",
+    "src/fixtures/FixtureLoader.ts",
+    "src/fixtures/index.ts",
+    "src/fixtures/TranscriptParser.test.ts"
   ],
   "blockers": []
 }

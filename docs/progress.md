@@ -22,6 +22,39 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Sprint 006: Mock Thread Fixtures
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented TranscriptParser for converting .md conversation transcripts to Message[] JSON
+- Implemented MockAudio for synthetic waveform generation (sine wave, white noise, speech-like)
+- Implemented FixtureLoader combining parsing + audio with getMessages() and getMoodAnnotations()
+- All 7 tests passing (61 total tests including edge cases)
+
+**Decisions:**
+- Speaker mapping: Jacob = user, Elyse/Elise = assistant
+- Transcript format: `Speaker:\n\n"Dialogue"` with quoted text extraction
+- MockAudio supports configurable duration, sample rate (44100Hz default), frequency
+- FixtureLoader includes static methods for fixture metadata (tones, available fixtures)
+- Speech-like waveform uses harmonics + amplitude modulation for realistic testing
+
+**Files Created:**
+- `src/types/fixtures.ts` - Type definitions (Message, Fixture, MoodAnnotation, MockAudioConfig)
+- `src/fixtures/TranscriptParser.ts` - Markdown transcript parser
+- `src/fixtures/MockAudio.ts` - Synthetic audio generator
+- `src/fixtures/FixtureLoader.ts` - Combined loader with getMessages/getMoodAnnotations
+- `src/fixtures/index.ts` - Module exports
+- `src/fixtures/TranscriptParser.test.ts` - Test suite
+
+**App State:**
+- Tests: 321/321 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 5 - Spectrogram, Feature 6 - Typography, Feature 9 - Theme Support, or Feature 8 - Control Interface
+
+---
+
 ### 2025-12-30 — Revision: Feature 10 (Mock Thread Fixtures)
 
 **Changes Made:**

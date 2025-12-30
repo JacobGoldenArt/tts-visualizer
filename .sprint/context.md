@@ -1,117 +1,82 @@
-# Sprint Context: Feature 7 - Mood-to-Visual Mapper
+# Sprint 006 Context: Mock Thread Fixtures
 
 ## Tech Stack
 - React + TypeScript
-- Vitest for testing with jsdom environment
+- Vitest for testing
+- Node.js fs for file loading (in tests/dev)
 
 ## Project Structure
 ```
 src/
-  core/
-    SemanticPipeline/  # Already implemented - provides MoodObject
-    MoodMapper/        # YOUR TARGET - implement here
-  types/
-    semantic.ts        # Contains MoodObject, Emotion types
+  fixtures/              # NEW - Create this directory
+    TranscriptParser.ts  # Main parser
+    MockAudio.ts         # Synthetic audio generator
+    FixtureLoader.ts     # Combines parsing + audio
+    index.ts             # Exports
+resources/
+  chat_transcripts/      # 5 .md files with real conversations
+    Elise and Jacob Dialogue.md
+    chat-thread1.md
+    coffee-chat.md
+    existential-gaps-and-consciousness.md
+    onanism.md
 ```
 
-## Input: MoodObject (from Semantic Pipeline)
+## Transcript Format
+The .md files follow this pattern:
+```
+Speaker:
 
-```typescript
-type Emotion = 'joy' | 'sadness' | 'anger' | 'fear' | 'surprise' | 'neutral';
+"Dialogue text goes here. May contain multiple sentences."
 
-interface MoodObject {
-  sentiment: number;  // -1 (negative) to 1 (positive)
-  energy: number;     // 0 (calm) to 1 (high energy)
-  keywords: string[]; // Top 5 relevant keywords
-  emotion: Emotion;   // Detected emotion
-}
+
+NextSpeaker:
+
+"Their response..."
 ```
 
-## Output: Visual Parameters
+- Speakers: `Jacob` = user role, `Elyse` = assistant role
+- Some files use `Elise` (with i) - treat same as Elyse
+- Dialogue is always in quotes
+- Blank lines separate exchanges
 
-The mapper should output:
-
+## Required Types
 ```typescript
-interface ColorPalette {
-  primary: string;    // Main color (HSL or hex)
-  secondary: string;  // Supporting color
-  accent: string;     // Highlight color
-}
-
-interface VisualParams {
-  palette: ColorPalette;
-  intensity: number;           // 0.5 to 1.5 multiplier
-  primitiveWeights: {          // Which primitives to emphasize
-    spectrogram: number;       // 0 to 1
-    typography: number;        // 0 to 1
-    blobs: number;             // 0 to 1
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  metadata?: {
+    speaker: string;  // Original name (Jacob, Elyse)
+    index: number;    // Message order
   };
 }
-```
 
-## Mood-to-Color Mapping Guidelines
+interface MoodAnnotation {
+  messageIndex: number;
+  mood: MoodObject;  // From src/types/semantic.ts
+}
 
-Use HSL color space for intuitive mapping:
-
-- **Positive sentiment (0 to 1)**: Warm hues (red, orange, yellow)
-  - Hue: ~0-60 degrees
-  - Higher saturation for more positive
-  - Higher lightness for more positive
-
-- **Negative sentiment (-1 to 0)**: Cool hues (blue, purple)
-  - Hue: ~180-280 degrees
-  - Lower saturation (muted)
-  - Lower lightness
-
-- **Energy affects saturation/brightness**:
-  - High energy: More vibrant (higher saturation, contrast)
-  - Low energy: More muted (lower saturation)
-
-## Emotion-Specific Colors (suggestions)
-
-- **Joy**: Warm yellows, oranges
-- **Sadness**: Deep blues, muted purples
-- **Anger**: Reds, dark oranges
-- **Fear**: Dark purples, deep grays
-- **Surprise**: Bright cyans, pinks
-- **Neutral**: Soft grays, muted tones
-
-## Interpolation
-
-The mapper should smoothly transition between mood states:
-- Track current visual params
-- When new mood arrives, interpolate over configurable duration
-- Use easing function for natural transitions
-
-```typescript
-// Example interpolation config
-interface MapperConfig {
-  interpolationDuration?: number;  // ms, default ~500
-  customPalettes?: Record<Emotion, ColorPalette>;
+interface Fixture {
+  name: string;
+  messages: Message[];
+  moodAnnotations?: MoodAnnotation[];
 }
 ```
 
-## Primitive Weights
+## Existing Code to Use
+- `src/types/semantic.ts` - MoodObject type
+- `src/core/SemanticPipeline/` - For generating mood annotations
 
-Suggest which visual primitives to emphasize:
-- High energy + positive → more spectrogram activity
-- Emotional + keywords present → more typography
-- Calm + neutral → more blobs/ambient
+## Mock Audio Requirements
+Create a synthetic waveform generator for testing:
+- Returns AudioBuffer-like data
+- Should generate sine wave patterns
+- Duration configurable
+- Sample rate: 44100Hz default
+- Used for testing visualizer without real TTS
 
 ## Testing Notes
-
-- Use jsdom environment
-- Test color output validity (valid HSL/hex)
-- Test interpolation over time
-- Test custom palette configuration
-
-## Files to Create
-- `src/core/MoodMapper/index.ts` - Module exports
-- `src/core/MoodMapper/MoodMapper.ts` - Main class
-- `src/core/MoodMapper/MoodMapper.test.ts` - Tests
-- Add types to `src/types/` (visual.ts or mapper.ts)
-
-## Conventions
-- Follow existing event emitter pattern if needed
-- Return copies from getters to prevent mutation
-- Use requestAnimationFrame for interpolation updates
+- Use Vitest (already configured)
+- Test file: `src/fixtures/TranscriptParser.test.ts`
+- Import transcripts at test time using fs.readFileSync
+- All tests should pass independently

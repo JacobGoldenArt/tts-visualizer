@@ -1,7 +1,63 @@
 {
-  "sprintId": null,
-  "feature": null,
-  "tests": [],
-  "context": {},
-  "status": "paused"
+  "sprintId": "sprint-006",
+  "timestamp": "2025-12-30T09:00:00Z",
+  "feature": {
+    "number": 10,
+    "name": "Mock Thread Fixtures",
+    "description": "Parse real conversation transcripts into structured fixtures for testing and development. Loads .md files from resources/chat_transcripts/ and converts them to Message[] JSON format.",
+    "dependencies": [],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "10.1",
+      "description": "Transcript parser converts .md files to Message[] JSON format",
+      "status": "pending"
+    },
+    {
+      "id": "10.2",
+      "description": "Parser correctly identifies speaker (Jacob → user, Elyse → assistant)",
+      "status": "pending"
+    },
+    {
+      "id": "10.3",
+      "description": "Parser preserves message order and content",
+      "status": "pending"
+    },
+    {
+      "id": "10.4",
+      "description": "Fixtures load from resources/chat_transcripts/*.md",
+      "status": "pending"
+    },
+    {
+      "id": "10.5",
+      "description": "Loaded fixtures include varied emotional tones (joy, tension, calm, existential)",
+      "status": "pending"
+    },
+    {
+      "id": "10.6",
+      "description": "Audio mock generates synthetic waveform for testing",
+      "status": "pending"
+    },
+    {
+      "id": "10.7",
+      "description": "Fixture loader exposes getMessages() and getMoodAnnotations() methods",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript", "Vitest"],
+    "relevantFiles": [
+      "resources/chat_transcripts/*.md",
+      "src/types/",
+      "src/core/SemanticPipeline/"
+    ],
+    "priorDecisions": [
+      "Speaker mapping: Jacob = user, Elyse = assistant",
+      "SemanticPipeline already exists for mood analysis",
+      "Message format should include role, content, and optional metadata"
+    ],
+    "notes": "5 transcript files exist. Format is 'Speaker:\\n\\n\"dialogue text\"'. Consider using SemanticPipeline for mood annotations."
+  },
+  "status": "ready"
 }

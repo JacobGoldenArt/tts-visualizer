@@ -104,20 +104,20 @@
 
 ### 10. Mock Thread Fixtures
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 
 **Description:** Parse real conversation transcripts into structured fixtures for testing and development.
 
 **Dependencies:** None
 
 **Tests:**
-- [ ] Transcript parser converts .md files to Message[] JSON format
-- [ ] Parser correctly identifies speaker (Jacob → user, Elyse → assistant)
-- [ ] Parser preserves message order and content
-- [ ] Fixtures load from resources/chat_transcripts/*.md
-- [ ] Loaded fixtures include varied emotional tones (joy, tension, calm, existential)
-- [ ] Audio mock generates synthetic waveform for testing
-- [ ] Fixture loader exposes getMessages() and getMoodAnnotations() methods
+- [x] Transcript parser converts .md files to Message[] JSON format
+- [x] Parser correctly identifies speaker (Jacob → user, Elyse → assistant)
+- [x] Parser preserves message order and content
+- [x] Fixtures load from resources/chat_transcripts/*.md
+- [x] Loaded fixtures include varied emotional tones (joy, tension, calm, existential)
+- [x] Audio mock generates synthetic waveform for testing
+- [x] Fixture loader exposes getMessages() and getMoodAnnotations() methods
 
 **Notes:**
 - Real transcripts in resources/chat_transcripts/ (5 files)
