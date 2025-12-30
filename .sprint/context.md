@@ -1,41 +1,30 @@
-# Sprint 008 Context: Typography
+# Sprint 009 Context: Theme Support
 
 ## Tech Stack
 - React + TypeScript
 - Canvas 2D (chosen for lo-fi aesthetic)
 - Vitest for testing (jsdom environment)
+- CSS custom properties for non-canvas elements (optional)
 
 ## Project Structure
 ```
 src/
+  themes/            # ← You are implementing this
+    dark.ts          # Dark theme definition
+    light.ts         # Light theme definition
+    ThemeManager.ts  # Theme state management
+    index.ts         # Exports
   primitives/
-    Typography/      # ← You are implementing this
-    Spectrogram/     # Already implemented
+    Spectrogram/     # Already implemented - needs theme integration
+    Typography/      # Already implemented - needs theme integration
   core/
-    SemanticPipeline/  # Provides keywords array
-    CanvasRenderer/    # Drawing utilities with sketchy aesthetic
-    MoodMapper/        # Provides ColorPalette
+    CanvasRenderer/  # Drawing utilities
+    MoodMapper/      # Provides ColorPalette based on mood
   types/
-    semantic.ts      # MoodObject interface
-    canvas.ts        # Drawing types
-    visual.ts        # ColorPalette, VisualParams
+    visual.ts        # ColorPalette, VisualParams types
 ```
 
 ## Key Interfaces
-
-### From SemanticPipeline (src/types/semantic.ts)
-```typescript
-interface MoodObject {
-  sentiment: number;   // -1 to 1 scale
-  energy: number;      // 0 to 1 scale
-  keywords: string[];  // Top 5 most relevant words
-  emotion: 'joy' | 'sadness' | 'anger' | 'fear' | 'surprise' | 'neutral';
-}
-```
-
-### From CanvasRenderer (src/core/CanvasRenderer)
-- `drawText(ctx, text, x, y, options)` - Text with optional distortion
-- Uses layer system (background, midground, foreground)
 
 ### From MoodMapper (src/types/visual.ts)
 ```typescript
@@ -47,59 +36,81 @@ interface ColorPalette {
 }
 ```
 
+### Theme Interface (to be created)
+```typescript
+type ThemeMode = 'dark' | 'light' | 'system';
+
+interface Theme {
+  name: 'dark' | 'light';
+  background: string;
+  foreground: string;  // Default text/accent color
+  // Base palette that mood mapper can modify
+  basePalette: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+}
+
+interface ThemeManager {
+  getTheme(): Theme;
+  setTheme(mode: ThemeMode): void;
+  onThemeChange(callback: (theme: Theme) => void): void;
+}
+```
+
 ## Visual Direction
-- **Lo-fi, warm, a little weird** - roughness is a feature
-- Keywords float/drift across canvas
-- Fading in and out over time
-- Size/emphasis based on mood energy
-- Glow effect for highlighted keywords
-- NOT full conversation text - just keywords/fragments
+- **Dark theme**: Dark background (near black), light accents
+- **Light theme**: Light background (off-white), dark accents
+- Mood colors should remain vibrant and legible in both themes
+- Smooth transitions between themes (no jarring flash)
+- Lo-fi aesthetic maintained in both themes
 
 ## Implementation Notes
 
-1. **Location**: `src/primitives/Typography/`
-   - `Typography.ts` - Main class
-   - `Typography.test.ts` - Test suite
+1. **Location**: `src/themes/`
+   - `dark.ts` - Dark theme definition
+   - `light.ts` - Light theme definition
+   - `ThemeManager.ts` - Manages theme state, system preference detection
    - `index.ts` - Exports
 
-2. **Keyword rendering**:
-   - Each keyword is a floating "particle" with position, velocity, opacity
-   - Keywords fade in, drift, then fade out
-   - Size based on emphasis/intensity
-   - Color from ColorPalette
+2. **Theme detection**:
+   - Use `window.matchMedia('(prefers-color-scheme: dark)')` for system preference
+   - Listen for changes with `matchMedia.addEventListener('change', ...)`
+   - Default to system preference, but allow override
 
-3. **Controls**:
-   - `intensity` (0-1): Affects keyword size/glow strength
-   - `motion` (0-1): Affects drift speed
-   - `mode` ('text' | 'visual'): Text mode = subtle/ambient, Visual mode = prominent/expressive
-   - `fontFamily`: Configurable font
-   - `baseSize`: Base font size
-   - `fadeDuration`: How long keywords take to fade out
+3. **Theme application**:
+   - ThemeManager exposes current theme
+   - Primitives (Spectrogram, Typography) should read theme for base colors
+   - MoodMapper can still override/adjust colors based on mood
 
-4. **User vs AI differentiation**: Subtle visual difference (color tint, position bias, etc.)
+4. **Smooth transitions**:
+   - Use interpolation when switching themes (similar to MoodMapper)
+   - Transition duration ~300ms for smooth feel
 
-5. **Lifecycle**: Keywords should have spawn time, lifetime, and auto-cleanup
+5. **Integration with existing code**:
+   - Primitives already accept ColorPalette - theme can provide base palette
+   - MoodMapper already supports custom configurations - theme can influence defaults
 
 ## Existing Patterns
 
-From CanvasRenderer usage:
+From MoodMapper (smooth transitions):
 ```typescript
-// Text with distortion example
-renderer.drawText(ctx, 'keyword', x, y, {
-  font: '24px sans-serif',
-  color: palette.primary,
-  distortion: 0.2  // Slight shake/wobble
-});
+// Interpolate between colors over time
+private interpolateColor(from: string, to: string, t: number): string {
+  // HSL interpolation logic
+}
 ```
 
-From Spectrogram pattern:
+From Spectrogram/Typography (palette usage):
 ```typescript
-// Mode affects opacity
-const opacity = this.mode === 'visual' ? 1.0 : 0.3;
+// Primitives accept palette
+spectrogram.setPalette(colorPalette);
+typography.setPalette(colorPalette);
 ```
 
 ## Test Conventions
 - Use Vitest with jsdom environment
-- Mock canvas context for rendering tests
-- Test keyword lifecycle (spawn, update, fade, cleanup)
-- Verify positioning stays within bounds
+- Mock window.matchMedia for system preference tests
+- Test theme switching and transitions
+- Verify palette colors are applied correctly

@@ -240,21 +240,21 @@
 
 ### 9. Theme Support
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 
 **Description:** Dark and light theme variants that adapt all visual elements.
 
 **Dependencies:** 4 (Canvas Renderer)
 
 **Tests:**
-- [ ] Dark theme applies dark background, light accents
-- [ ] Light theme applies light background, dark accents
-- [ ] Theme is configurable via prop
-- [ ] Theme respects system preference by default (prefers-color-scheme)
-- [ ] Theme can be overridden regardless of system preference
-- [ ] Theme change transitions smoothly (no flash)
-- [ ] All primitives (spectrogram, typography) adapt to current theme
-- [ ] Mood colors work well in both themes
+- [x] Dark theme applies dark background, light accents
+- [x] Light theme applies light background, dark accents
+- [x] Theme is configurable via prop
+- [x] Theme respects system preference by default (prefers-color-scheme)
+- [x] Theme can be overridden regardless of system preference
+- [x] Theme change transitions smoothly (no flash)
+- [x] All primitives (spectrogram, typography) adapt to current theme
+- [x] Mood colors work well in both themes
 
 **Notes:**
 - Ensure mood palettes are legible in both themes

@@ -22,6 +22,40 @@
 
 ## Add Progress Log Items Here:
 
+### 2025-12-30 — Sprint 009: Theme Support
+
+**Status:** 🔴 → 🟢
+
+**Completed:**
+- Implemented ThemeManager with dark and light theme support
+- System preference detection via matchMedia API
+- Smooth HSL color interpolation for transitions
+- All 8 tests passing (54 test cases total including edge cases)
+
+**Decisions:**
+- Theme provides background, foreground, and basePalette colors
+- Dark theme: ~8% lightness background, 40-80% lightness palette colors
+- Light theme: ~95% lightness background, 20-60% lightness palette colors
+- Transition duration configurable (default 300ms)
+- Ease-out cubic easing for natural transitions
+- Both themes maintain warm accent colors for lo-fi aesthetic
+
+**Files Created:**
+- `src/types/theme.ts` - Type definitions
+- `src/themes/dark.ts` - Dark theme definition
+- `src/themes/light.ts` - Light theme definition
+- `src/themes/ThemeManager.ts` - Theme state management
+- `src/themes/ThemeManager.test.ts` - Test suite
+- `src/themes/index.ts` - Module exports
+
+**App State:**
+- Tests: 493/493 passing (cumulative)
+- TypeScript: Compiles clean
+
+**Next:** Feature 8 - Control Interface, then Feature 11 - Main Visualizer Component
+
+---
+
 ### 2025-12-30 — Sprint 008: Typography
 
 **Status:** 🔴 → 🟢

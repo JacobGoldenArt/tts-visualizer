@@ -1,0 +1,89 @@
+{
+  "sprintId": "sprint-008",
+  "timestamp": "2025-12-30T13:00:00Z",
+  "feature": {
+    "number": 6,
+    "name": "Typography",
+    "description": "Keyword/fragment display that emphasizes semantic content from the conversation. Floats, fades, responds to mood.",
+    "dependencies": [3, 4],
+    "status": "in_progress"
+  },
+  "tests": [
+    {
+      "id": "6.1",
+      "description": "Typography renders keywords from semantic pipeline",
+      "status": "pending"
+    },
+    {
+      "id": "6.2",
+      "description": "Keywords are visually emphasized (size, color, glow)",
+      "status": "pending"
+    },
+    {
+      "id": "6.3",
+      "description": "In text mode: typography is subtle, ambient",
+      "status": "pending"
+    },
+    {
+      "id": "6.4",
+      "description": "In visual mode: typography is prominent, expressive",
+      "status": "pending"
+    },
+    {
+      "id": "6.5",
+      "description": "Typography accepts font family and base size config",
+      "status": "pending"
+    },
+    {
+      "id": "6.6",
+      "description": "Text fades out over time (configurable fade duration)",
+      "status": "pending"
+    },
+    {
+      "id": "6.7",
+      "description": "Typography handles positioning within canvas bounds",
+      "status": "pending"
+    },
+    {
+      "id": "6.8",
+      "description": "Motion control affects text drift/float behavior",
+      "status": "pending"
+    },
+    {
+      "id": "6.9",
+      "description": "Intensity control affects keyword emphasis strength",
+      "status": "pending"
+    },
+    {
+      "id": "6.10",
+      "description": "Typography can differentiate user vs AI content (subtle)",
+      "status": "pending"
+    },
+    {
+      "id": "6.11",
+      "description": "Keywords 'pop' or float independently based on mood",
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "techStack": ["React", "TypeScript", "Canvas 2D"],
+    "relevantFiles": [
+      "src/core/SemanticPipeline/SemanticPipeline.ts",
+      "src/core/CanvasRenderer/CanvasRenderer.ts",
+      "src/core/MoodMapper/MoodMapper.ts",
+      "src/types/semantic.ts",
+      "src/types/canvas.ts",
+      "src/types/visual.ts"
+    ],
+    "priorDecisions": [
+      "Canvas 2D for lo-fi hand-drawn aesthetic",
+      "CanvasRenderer provides drawText() with optional distortion",
+      "SemanticPipeline outputs keywords array (top 5 most relevant words)",
+      "MoodMapper outputs ColorPalette with primary, secondary, accent colors",
+      "Text/Visual mode = opacity/z-index adjustment",
+      "Lo-fi, warm, a little weird - roughness is a feature"
+    ],
+    "notes": "Typography goes in src/primitives/Typography/. Displays keywords/fragments ONLY, not full conversation text. Full text stays in the existing chat UI. Consider floating/drifting animation for keywords."
+  },
+  "status": "ready"
+}
